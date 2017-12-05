@@ -5,8 +5,6 @@ export default function* rootSaga() {
   yield takeEvery(Actions.fetchAccountNames, fetchAccountNames);
 }
 
-console.log(process.env);
-
 function* fetchAccountNames() {
   try {
     const response = yield call(fetch, '/api/v1/accountnames');
