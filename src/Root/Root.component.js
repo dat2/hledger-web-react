@@ -4,15 +4,17 @@ import React, { Component } from 'react';
 class Root extends Component {
   static propTypes = {
     accounts: PropTypes.object.isRequired,
-    fetchAccountNames: PropTypes.func.isRequired
+    fetchAccountNames: PropTypes.func.isRequired,
+    fetchTransactions: PropTypes.func.isRequired
   };
 
   componentDidMount() {
     this.props.fetchAccountNames();
+    this.props.fetchTransactions();
   }
 
   render() {
-    return <pre>{ JSON.stringify(this.props.accounts, null, 4) }</pre>;
+    return <pre>{JSON.stringify(this.props.accounts, null, 4)}</pre>;
   }
 }
 

@@ -1,7 +1,7 @@
 import set from 'lodash.set';
 import { handleActions } from 'redux-actions';
 
-import { fetchAccountNamesSuccess, fetchAccountNamesFailed } from './Root.actions';
+import Actions from './Root.actions';
 
 const initialState = {
   accounts: {},
@@ -12,13 +12,16 @@ function convertAccountNamesToMap(names) {
   return names.reduce((acc, name) => set(acc, name.split(':'), {}), {});
 }
 
-export default handleActions({
-  [fetchAccountNamesSuccess]: (state, action) => ({
-    ...state,
-    accounts: convertAccountNamesToMap(action.payload),
-  }),
-  [fetchAccountNamesFailed]: (state, action) => ({
-    ...state,
-    error: action.payload
-  })
-}, initialState);
+export default handleActions(
+  {
+    [Actions.fetchAccountNamesSuccess]: (state, action) => ({
+      ...state,
+      accounts: convertAccountNamesToMap(action.payload)
+    }),
+    [Actions.fetchAccountNamesFailed]: (state, action) => ({
+      ...state,
+      error: action.payload
+    })
+  },
+  initialState
+);
