@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 class Root extends Component {
   static propTypes = {
+    accounts: PropTypes.object.isRequired,
     fetchAccountNames: PropTypes.func.isRequired
   };
 
@@ -11,7 +12,7 @@ class Root extends Component {
   }
 
   render() {
-    return <div>Hello World</div>;
+    return <pre>{ JSON.stringify(this.props.accounts, null, 4) }</pre>;
   }
 }
 

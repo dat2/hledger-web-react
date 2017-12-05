@@ -5,7 +5,9 @@ import Root from './Root.component';
 import { fetchAccountNames } from './Root.actions';
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    accounts: state.root.accounts
+  };
 }
 
 function mapDispatchToProps(dispatch) {
