@@ -10,7 +10,7 @@ class Root extends Component {
 
   componentDidMount() {
     this.props.fetchAccountNames();
-    this.props.fetchTransactions();
+    this.props.loadTransactions();
   }
 
   render() {
