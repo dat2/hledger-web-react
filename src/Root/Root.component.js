@@ -5,7 +5,8 @@ class Root extends Component {
   static propTypes = {
     accounts: PropTypes.object.isRequired,
     fetchAccountNames: PropTypes.func.isRequired,
-    fetchTransactions: PropTypes.func.isRequired
+    loadTransactions: PropTypes.func.isRequired,
+    invalidateTransactionsCache: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -14,7 +15,12 @@ class Root extends Component {
   }
 
   render() {
-    return <pre>{JSON.stringify(this.props.accounts, null, 4)}</pre>;
+    return (
+      <div>
+        <button onClick={() => this.props.invalidateTransactionsCache()}>Invalidate</button>
+        <pre>{JSON.stringify(this.props.accounts, null, 4)}</pre>
+      </div>
+    );
   }
 }
 

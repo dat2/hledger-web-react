@@ -9,7 +9,8 @@ export default function* rootSaga() {
     takeEvery(Actions.loadTransactions, loadTransactions),
     takeEvery(Actions.loadTransactionsCacheMiss, fetchTransactions),
     takeEvery(Actions.fetchTransactions, fetchTransactions),
-    takeEvery(Actions.loadTransactionsSuccess, cacheTransactions)
+    takeEvery(Actions.loadTransactionsSuccess, cacheTransactions),
+    takeEvery(Actions.invalidateTransactionsCache, invalidateTransactionsCache)
   ]);
 }
 
@@ -51,4 +52,8 @@ function* fetchTransactions() {
 
 function* cacheTransactions({ payload: { data } }) {
   yield call(() => localforage.setItem('transactions', data));
+}
+
+function* invalidateTransactionsCache() {
+  yield call(() => localforage.removeItem('transactions'));
 }
