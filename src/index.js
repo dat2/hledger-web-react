@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'sanitize.css';
 
-import { Root } from './Root';
+import { RootContainer, RootSaga } from './Root';
 import configureStore from './configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
-const store = configureStore();
+const store = configureStore({ sagas: [RootSaga] });
 
 ReactDOM.render(
   <Provider store={store}>
-    <Root />
+    <RootContainer />
   </Provider>,
   document.getElementById('root')
 );

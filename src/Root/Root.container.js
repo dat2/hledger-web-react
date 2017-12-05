@@ -1,9 +1,20 @@
-import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-class Root extends Component {
-  render() {
-    return <div>Hello World</div>;
-  }
+import Root from './Root.component';
+import { fetchAccountNames } from './Root.actions';
+
+function mapStateToProps(state) {
+  return {};
 }
 
-export default Root;
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      fetchAccountNames
+    },
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

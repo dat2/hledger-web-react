@@ -1,0 +1,536 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.4",
+    "title": "hledger API",
+    "license": {
+      "name": "GPLv3+"
+    },
+    "description": "This is the API provided by hledger-api for reading hledger data"
+  },
+  "paths": {
+    "/api/v1/accountnames": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/transactions": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              },
+              "type": "array"
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/prices": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/MarketPrice"
+              },
+              "type": "array"
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/commodities": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/accounts": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Account"
+              },
+              "type": "array"
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/accounts/{acct}": {
+      "get": {
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "acct",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "minItems": 2,
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "minItems": 6,
+                    "items": [
+                      {
+                        "$ref": "#/definitions/Transaction"
+                      },
+                      {
+                        "$ref": "#/definitions/Transaction"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "$ref": "#/definitions/MixedAmount"
+                      },
+                      {
+                        "$ref": "#/definitions/MixedAmount"
+                      }
+                    ],
+                    "maxItems": 6,
+                    "type": "array"
+                  },
+                  "type": "array"
+                }
+              ],
+              "maxItems": 2,
+              "type": "array"
+            },
+            "description": ""
+          },
+          "404": {
+            "description": "`acct` not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Transaction": {
+      "required": [
+        "tindex",
+        "tsourcepos",
+        "tdate",
+        "tstatus",
+        "tcode",
+        "tdescription",
+        "tcomment",
+        "ttags",
+        "tpostings",
+        "tpreceding_comment_lines"
+      ],
+      "properties": {
+        "tindex": {
+          "type": "integer"
+        },
+        "tsourcepos": {
+          "$ref": "#/definitions/GenericSourcePos"
+        },
+        "tdate": {
+          "$ref": "#/definitions/Day"
+        },
+        "tdate2": {
+          "$ref": "#/definitions/Day"
+        },
+        "tstatus": {
+          "$ref": "#/definitions/Status"
+        },
+        "tcode": {
+          "type": "string"
+        },
+        "tdescription": {
+          "type": "string"
+        },
+        "tcomment": {
+          "type": "string"
+        },
+        "ttags": {
+          "items": {
+            "minItems": 2,
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "maxItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
+        "tpostings": {
+          "items": {
+            "$ref": "#/definitions/Posting"
+          },
+          "type": "array"
+        },
+        "tpreceding_comment_lines": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GenericSourcePos": {
+      "properties": {
+        "GenericSourcePos": {
+          "minItems": 3,
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "maximum": 9223372036854776000,
+              "minimum": -9223372036854776000,
+              "type": "integer"
+            },
+            {
+              "maximum": 9223372036854776000,
+              "minimum": -9223372036854776000,
+              "type": "integer"
+            }
+          ],
+          "maxItems": 3,
+          "type": "array"
+        },
+        "JournalSourcePos": {
+          "minItems": 2,
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "minItems": 2,
+              "items": [
+                {
+                  "maximum": 9223372036854776000,
+                  "minimum": -9223372036854776000,
+                  "type": "integer"
+                },
+                {
+                  "maximum": 9223372036854776000,
+                  "minimum": -9223372036854776000,
+                  "type": "integer"
+                }
+              ],
+              "maxItems": 2,
+              "type": "array"
+            }
+          ],
+          "maxItems": 2,
+          "type": "array"
+        }
+      },
+      "maxProperties": 1,
+      "minProperties": 1,
+      "type": "object"
+    },
+    "Day": {
+      "example": "2016-07-22",
+      "format": "date",
+      "type": "string"
+    },
+    "Status": {
+      "type": "string",
+      "enum": [
+        "Unmarked",
+        "Pending",
+        "Cleared"
+      ]
+    },
+    "Posting": {
+      "required": [
+        "pstatus",
+        "paccount",
+        "pamount",
+        "pcomment",
+        "ptype",
+        "ptags"
+      ],
+      "properties": {
+        "pdate": {
+          "$ref": "#/definitions/Day"
+        },
+        "pdate2": {
+          "$ref": "#/definitions/Day"
+        },
+        "pstatus": {
+          "$ref": "#/definitions/Status"
+        },
+        "paccount": {
+          "type": "string"
+        },
+        "pamount": {
+          "$ref": "#/definitions/MixedAmount"
+        },
+        "pcomment": {
+          "type": "string"
+        },
+        "ptype": {
+          "$ref": "#/definitions/PostingType"
+        },
+        "ptags": {
+          "items": {
+            "minItems": 2,
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "maxItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
+        "pbalanceassertion": {
+          "$ref": "#/definitions/Amount"
+        },
+        "ptransaction": {
+          "$ref": "#/definitions/Transaction"
+        },
+        "porigin": {
+          "$ref": "#/definitions/Posting"
+        }
+      },
+      "type": "object"
+    },
+    "MixedAmount": {
+      "items": {
+        "$ref": "#/definitions/Amount"
+      },
+      "type": "array"
+    },
+    "Amount": {
+      "required": [
+        "acommodity",
+        "aquantity",
+        "aprice",
+        "astyle",
+        "amultiplier"
+      ],
+      "properties": {
+        "acommodity": {
+          "type": "string"
+        },
+        "aquantity": {
+          "$ref": "#/definitions/Decimal"
+        },
+        "aprice": {
+          "$ref": "#/definitions/Price"
+        },
+        "astyle": {
+          "$ref": "#/definitions/AmountStyle"
+        },
+        "amultiplier": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Decimal": {
+      "example": "100",
+      "type": "number"
+    },
+    "Price": {
+      "properties": {
+        "NoPrice": {
+          "items": [],
+          "type": "array"
+        },
+        "UnitPrice": {
+          "$ref": "#/definitions/Amount"
+        },
+        "TotalPrice": {
+          "$ref": "#/definitions/Amount"
+        }
+      },
+      "maxProperties": 1,
+      "minProperties": 1,
+      "type": "object"
+    },
+    "AmountStyle": {
+      "required": [
+        "ascommodityside",
+        "ascommodityspaced",
+        "asprecision"
+      ],
+      "properties": {
+        "ascommodityside": {
+          "$ref": "#/definitions/Side"
+        },
+        "ascommodityspaced": {
+          "type": "boolean"
+        },
+        "asprecision": {
+          "maximum": 9223372036854776000,
+          "minimum": -9223372036854776000,
+          "type": "integer"
+        },
+        "asdecimalpoint": {
+          "maxLength": 1,
+          "example": "?",
+          "minLength": 1,
+          "type": "string"
+        },
+        "asdigitgroups": {
+          "$ref": "#/definitions/DigitGroupStyle"
+        }
+      },
+      "type": "object"
+    },
+    "Side": {
+      "type": "string",
+      "enum": [
+        "L",
+        "R"
+      ]
+    },
+    "DigitGroupStyle": {
+      "minItems": 2,
+      "items": [
+        {
+          "maxLength": 1,
+          "example": "?",
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "items": {
+            "maximum": 9223372036854776000,
+            "minimum": -9223372036854776000,
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      ],
+      "maxItems": 2,
+      "type": "array"
+    },
+    "PostingType": {
+      "type": "string",
+      "enum": [
+        "RegularPosting",
+        "VirtualPosting",
+        "BalancedVirtualPosting"
+      ]
+    },
+    "MarketPrice": {
+      "required": [
+        "mpdate",
+        "mpcommodity",
+        "mpamount"
+      ],
+      "properties": {
+        "mpdate": {
+          "$ref": "#/definitions/Day"
+        },
+        "mpcommodity": {
+          "type": "string"
+        },
+        "mpamount": {
+          "$ref": "#/definitions/Amount"
+        }
+      },
+      "type": "object"
+    },
+    "Account": {
+      "required": [
+        "aname",
+        "aebalance",
+        "asubs",
+        "anumpostings",
+        "aibalance",
+        "aboring"
+      ],
+      "properties": {
+        "aname": {
+          "type": "string"
+        },
+        "aebalance": {
+          "$ref": "#/definitions/MixedAmount"
+        },
+        "asubs": {
+          "items": {
+            "$ref": "#/definitions/Account"
+          },
+          "type": "array"
+        },
+        "anumpostings": {
+          "maximum": 9223372036854776000,
+          "minimum": -9223372036854776000,
+          "type": "integer"
+        },
+        "aibalance": {
+          "$ref": "#/definitions/MixedAmount"
+        },
+        "aparent": {
+          "$ref": "#/definitions/Account"
+        },
+        "aboring": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
