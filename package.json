@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "localforage": "^1.5.5",
     "lodash.set": "^4.3.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
