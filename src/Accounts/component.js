@@ -36,7 +36,7 @@ const Item = styled.li`
 `;
 
 const Quantity = styled.span`
-  color: ${props => props.negative ? 'red': 'inherit'};
+  color: ${props => (props.negative ? 'red' : 'inherit')};
 `;
 
 class AccountRow extends Component {
@@ -62,7 +62,13 @@ class AccountRow extends Component {
         <li>
           <Row>
             <span>{name}</span>
-            <span>{quantities.map((quantity, index) => <Quantity key={index} negative={quantity.amount < 0}>{quantity.format()}</Quantity>)}</span>
+            <span>
+              {quantities.map((quantity, index) => (
+                <Quantity key={index} negative={quantity.amount < 0}>
+                  {quantity.format()}
+                </Quantity>
+              ))}
+            </span>
           </Row>
         </li>
         <Item hidden={this.state.hidden}>
