@@ -15,7 +15,7 @@ export default function* transactionsSaga(): Saga<void> {
   ]);
 }
 
-function* getTransactions(): Saga<void>  {
+function* getTransactions(): Saga<void> {
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {
     yield put(

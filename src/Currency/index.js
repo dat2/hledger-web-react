@@ -1,5 +1,19 @@
+// @flow
+
 import * as R from 'ramda';
 import padEnd from 'lodash.padend';
+
+type AmountStyle = {
+  ascommodityside: 'L' | 'R',
+  ascommodityspaced: boolean,
+  asdecimalpoint: string,
+  asdigitgroups?: [string, number]
+};
+
+type Amount = {
+  aquantity: string,
+  astyle: AmountStyle
+};
 
 function* chunksGenerator(iterable, n) {
   for (let i = 0; i < iterable.length / n; i++) {
@@ -9,7 +23,7 @@ function* chunksGenerator(iterable, n) {
 
 const chunks = (...args) => Array.from(chunksGenerator(...args));
 
-export function transformAmount(amount) {
+export function transformAmount(amount: Amount) {
   return {
     symbol: amount.acommodity ? amount.acommodity : '$',
     quantity: Number(amount.aquantity),
@@ -29,7 +43,9 @@ export function transformAmount(amount) {
       return `${this.formatPrefix()}${this.formatNumber()}${this.formatSuffix()}`;
     },
     formatPrefix() {
-      return this.style.side === 'L' ? this.symbol : '';
+      return this.style.side === 'L'
+        ? this.symbol + (this.style.spaced ? ' ' : '')
+        : '';
     },
     formatNumber() {
       const string = this.quantity.toString();
@@ -43,20 +59,22 @@ export function transformAmount(amount) {
         this.style.decimalPoint
       }${this.formatFractional(fractional)}`;
     },
-    formatInteger(integer) {
+    formatInteger(integer: string) {
       return R.reverse(
         chunks(R.reverse(integer), this.style.numDigitsInGroup).join(
           this.style.digitSeparator
         )
       );
     },
-    formatFractional(fractional) {
+    formatFractional(fractional: string) {
       // for now, just truncate
       // TODO handle rounding
       return fractional.substring(0, this.style.precision);
     },
     formatSuffix() {
-      return this.style.side === 'R' ? this.symbol : '';
+      return this.style.side === 'R'
+        ? (this.style.spaced ? ' ' : '') + this.symbol
+        : '';
     }
   };
 }
