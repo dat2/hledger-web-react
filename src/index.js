@@ -21,6 +21,7 @@ import registerServiceWorker from './registerServiceWorker';
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
+import LineChart from './LineChart';
 
 // globals
 
@@ -28,6 +29,12 @@ injectGlobal`
   body {
     font-size: 16px;
     font-family: ${system_ui}, sans-serif;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
   }
 `;
 
@@ -46,8 +53,11 @@ if (process.env.NODE_ENV !== 'production') {
 // setup
 
 const store = configureStore({
-  reducers: { [Accounts.key]: Accounts.reducer },
-  sagas: [Accounts.saga, Transactions.saga]
+  reducers: {
+    [Accounts.key]: Accounts.reducer,
+    [LineChart.key]: LineChart.reducer
+  },
+  sagas: [Accounts.saga, Transactions.saga, LineChart.saga]
 });
 
 const root_mount = document.getElementById('root');

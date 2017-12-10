@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
+import LineChart from '../LineChart';
 
 type RootProps = {
   fetchAccounts: () => void,
@@ -25,6 +26,7 @@ class Root extends Component<RootProps> {
       <Router>
         <Switch>
           <Route exact path={'/'} component={Accounts.Container} />
+          <Route exact path={'/chart'} component={LineChart.Container} />
           <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
           <Route component={NotFound.Component} />
         </Switch>
