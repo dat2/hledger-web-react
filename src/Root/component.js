@@ -12,14 +12,14 @@ import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
 
-type Props = {
+type RootProps = {
   // TODO: change this type
   accounts: any,
   fetchAccounts: () => void,
   loadTransactions: () => void
 };
 
-class Root extends Component<Props> {
+class Root extends Component<RootProps> {
   static propTypes = {
     accounts: PropTypes.object.isRequired,
     fetchAccounts: PropTypes.func.isRequired,
