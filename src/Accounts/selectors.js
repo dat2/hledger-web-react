@@ -2,6 +2,9 @@ export const key = 'accounts';
 
 const localState = state => state[key];
 
+const allAccounts = accounts => accounts.accounts;
+
 export default {
-  localState
+  localState,
+  allAccounts: state => allAccounts(localState(state))
 };

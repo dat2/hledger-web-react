@@ -3,7 +3,7 @@ import { handleActions } from 'redux-actions';
 import Actions from './actions';
 
 const initialState = {
-  accounts: null,
+  accounts: [],
   error: null
 };
 
@@ -16,7 +16,7 @@ export default handleActions(
     }),
     [Actions.fetchAccountsFailed]: (state, action) => ({
       ...state,
-      accounts: null,
+      accounts: [],
       error: action.payload
     })
   },
