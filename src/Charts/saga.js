@@ -26,7 +26,9 @@ function* computeLineChartData({ payload: { data } }) {
 
   const lineChartData = makeLineChartData(monthlyAccountData);
 
-  yield put(Actions.computeLineChartData(lineChartData));
+  const accumulated = accumulateLineChartData(lineChartData);
+
+  yield put(Actions.computeLineChartData(accumulated));
 }
 
 const groupByRootAccount = R.groupBy(
@@ -65,4 +67,12 @@ const makeLineChartData = R.compose(
   R.map(R.tail),
   R.toPairs,
   putDateIntoObject
+);
+
+const accumulateLineChartData = R.compose(
+  R.tail,
+  R.scan(
+    R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))),
+    defaultRootAccounts
+  )
 );

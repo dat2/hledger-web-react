@@ -31,6 +31,7 @@ const ChartView = ({ className, data, size }) => (
 
 const FullHeightChartView = styled(ChartView)`
   height: 100%;
+  overflow: hidden;
 `;
 
 export default sizeMe({ monitorHeight: true })(FullHeightChartView);
