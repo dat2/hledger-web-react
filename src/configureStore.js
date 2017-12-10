@@ -10,7 +10,7 @@ export default function configureStore(
 
   const middleware = [sagaMiddleware];
   if (process.env.NODE_ENV === 'development') {
-    middleware.add(logger);
+    middleware.push(logger);
   }
 
   const store = createStore(
