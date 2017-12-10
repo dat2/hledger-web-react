@@ -8,7 +8,7 @@ import component from './component';
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      getTransactions: Transactions.actions.getTransactions,
+      loadTransactions: Transactions.actions.loadTransactions
     },
     dispatch
   );

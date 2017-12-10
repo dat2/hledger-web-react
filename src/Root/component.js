@@ -12,11 +12,11 @@ import Accounts from '../Accounts';
 
 class Root extends Component {
   static propTypes = {
-    getTransactions: PropTypes.func.isRequired
+    loadTransactions: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    this.props.getTransactions();
+    this.props.loadTransactions();
   }
 
   render() {

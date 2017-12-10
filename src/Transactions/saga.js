@@ -5,23 +5,20 @@ import Actions from './actions';
 
 export default function* transactionsSaga() {
   yield all([
-    takeEvery(Actions.loadTransactionsFromCache, loadTransactionsFromCache),
-    takeEvery(Actions.loadTransactionsFromCacheFailed, fetchTransactions),
+    takeEvery(Actions.loadTransactions, getTransactions),
     takeEvery(Actions.fetchTransactions, fetchTransactions),
-    takeEvery(Actions.loadTransactionsSuccess, cacheTransactions),
-    takeEvery(Actions.invalidateTransactionsCache, invalidateTransactionsCache)
+    takeEvery(Actions.loadTransactionsSuccess, cacheTransactions)
   ]);
 }
 
-function* loadTransactionsFromCache() {
-  // fetch from cache
+function* getTransactions() {
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {
     yield put(
       Actions.loadTransactionsSuccess({ data: cached, isCached: true })
     );
   } else {
-    yield put(Actions.loadTransactionsCacheMiss());
+    yield* fetchTransactions();
   }
 }
 
@@ -30,17 +27,37 @@ function* fetchTransactions() {
     // just in case things are updated, we'll just dispatch it twice, and let things
     // like reselect prevent re-renders
     const response = yield call(fetch, '/api/v1/transactions');
-    const data = yield call(() => response.json());
+    const json = yield call(() => response.json());
+    const data = yield call(transformApiResponse, json);
     yield put(Actions.loadTransactionsSuccess({ data, isCached: false }));
   } catch (e) {
     yield put(Actions.loadTransactionsFailed(e));
   }
 }
 
-function* cacheTransactions({ payload: { data } }) {
-  yield call(() => localforage.setItem('transactions', data));
+function transformApiResponse(data) {
+  return data.map(transformTransaction);
 }
 
-function* invalidateTransactionsCache() {
-  yield call(() => localforage.removeItem('transactions'));
+function transformTransaction(transaction) {
+  return {
+    date: transaction.tdate,
+    description: transaction.tdescription,
+    postings: transaction.tpostings.map(transformPosting)
+  };
+}
+
+function transformPosting(posting) {
+  return {
+    account: posting.paccount,
+    amounts: posting.pamount.map(transformAmount)
+  };
+}
+
+function transformAmount(amount) {
+  return amount.aquantity;
+}
+
+function* cacheTransactions({ payload: { data } }) {
+  yield call(() => localforage.setItem('transactions', data));
 }
