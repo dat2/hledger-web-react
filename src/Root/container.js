@@ -17,7 +17,8 @@ function mapDispatchToProps(dispatch) {
     {
       fetchAccounts: Accounts.actions.fetchAccounts,
       loadTransactions: Transactions.actions.loadTransactions,
-      invalidateTransactionsCache: Transactions.actions.invalidateTransactionsCache
+      invalidateTransactionsCache:
+        Transactions.actions.invalidateTransactionsCache
     },
     dispatch
   );

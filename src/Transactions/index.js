@@ -7,6 +7,6 @@ export default {
   actions,
   // key,
   // reducer,
-  saga,
+  saga
   // selectors
 };
