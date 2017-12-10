@@ -43,7 +43,7 @@ const groupByRootAccounts = R.map(
 
 // take an object of {rootAccount:[amounts]} and sum the amounts
 // {month:{rootAccount:[amounts]}} -> {month:{rootAccount:amount}}
-const sumAmounts = R.map(R.map(R.compose(R.sum, R.map(Number))));
+const sumAmounts = R.map(R.map(R.compose(R.sum, R.map(R.prop('quantity')))));
 
 const defaultRootAccounts = {
   assets: 0,
