@@ -19,8 +19,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import configureStore from './configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
-import NotFound from './not_found';
-import Dashboard from './dashboard';
+import NotFound from './NotFound';
+import Dashboard from './Dashboard';
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
@@ -58,8 +58,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route exact path={'/'} component={Root.Container} />
-        <Route exact path={'/ui-proposal'} component={Dashboard} />
-        <Route component={NotFound} />
+        <Route exact path={'/ui-proposal'} component={Dashboard.Container} />
+        <Route component={NotFound.Container} />
       </Switch>
     </Router>
   </Provider>,
