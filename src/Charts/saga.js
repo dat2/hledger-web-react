@@ -1,5 +1,5 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import moment from 'moment';
+import startOfMonth from 'date-fns/start_of_month';
 import * as R from 'ramda';
 
 import Transactions from '../Transactions';
@@ -16,9 +16,7 @@ export default function* chartsSaga() {
 function* computeLineChartData({ payload: { data } }) {
   const monthlyTransactionAccounts = data.map(({ date, postings }) => ({
     accounts: flattenPostingsToRootAccounts(groupByRootAccount(postings)),
-    month: moment(date)
-      .startOf('month')
-      .format('YYYY-MM-DD')
+    month: startOfMonth(date)
   }));
 
   const monthlyAccountData = addDefaultValues(
