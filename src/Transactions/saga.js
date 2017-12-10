@@ -5,15 +5,15 @@ import Actions from './actions';
 
 export default function* transactionsSaga() {
   yield all([
-    takeEvery(Actions.loadTransactions, loadTransactions),
-    takeEvery(Actions.loadTransactionsCacheMiss, fetchTransactions),
+    takeEvery(Actions.loadTransactionsFromCache, loadTransactionsFromCache),
+    takeEvery(Actions.loadTransactionsFromCacheFailed, fetchTransactions),
     takeEvery(Actions.fetchTransactions, fetchTransactions),
     takeEvery(Actions.loadTransactionsSuccess, cacheTransactions),
     takeEvery(Actions.invalidateTransactionsCache, invalidateTransactionsCache)
   ]);
 }
 
-function* loadTransactions() {
+function* loadTransactionsFromCache() {
   // fetch from cache
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {

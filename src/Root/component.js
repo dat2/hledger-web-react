@@ -5,14 +5,11 @@ import Accounts from '../Accounts';
 
 class Root extends Component {
   static propTypes = {
-    accounts: PropTypes.object.isRequired,
-    fetchAccounts: PropTypes.func.isRequired,
-    loadTransactions: PropTypes.func.isRequired
+    getTransactions: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    this.props.fetchAccounts();
-    this.props.loadTransactions();
+    this.props.getTransactions();
   }
 
   render() {
