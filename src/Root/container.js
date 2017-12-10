@@ -8,12 +8,6 @@ import Transactions from '../Transactions';
 
 import component from './component';
 
-function mapStateToProps(state) {
-  return {
-    accounts: Accounts.selectors.localState(state)
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
@@ -26,4 +20,4 @@ function mapDispatchToProps(dispatch) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(component);
+export default connect(undefined, mapDispatchToProps)(component);

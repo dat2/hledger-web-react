@@ -3,12 +3,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Currency } from '../Currency';
-import type { Account } from './saga';
-
-type AccountsViewProps = {
-  // TODO: change type
-  accounts: Array<Account>
-};
+import type {
+  AccountsViewProps,
+  AccountRowProps,
+  AccountRowState
+} from './types';
 
 const AccountsView = (props: AccountsViewProps) => (
   <div>
@@ -36,14 +35,6 @@ const Item = styled.li`
 const Quantity = styled.span`
   color: ${props => (props.negative ? 'red' : 'inherit')};
 `;
-
-type AccountRowProps = {
-  account: Account
-};
-
-type AccountRowState = {
-  hidden: boolean
-};
 
 class AccountRow extends Component<AccountRowProps, AccountRowState> {
   state = {

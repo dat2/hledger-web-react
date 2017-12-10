@@ -4,21 +4,9 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 
 import { transformAmount } from '../Currency';
-import type { HledgerAmount, Amount } from '../Currency/types';
+import type { HledgerAccount } from './types';
 
 import Actions from './actions';
-
-type HledgerAccount = {
-  aname: string,
-  aibalance: Array<HledgerAmount>,
-  asubs: Array<HledgerAccount>
-};
-
-export type Account = {
-  name: string,
-  amounts: Array<Amount>,
-  children: Array<Account>
-};
 
 export default function* accountsSaga(): Saga<void> {
   yield takeLatest(Actions.fetchAccounts, fetchAccounts);

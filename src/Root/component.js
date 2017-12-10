@@ -1,31 +1,20 @@
 // @flow
 
 // 3rd-party imports
-
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // local imports
-
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
 
 type RootProps = {
-  // TODO: change this type
-  accounts: any,
   fetchAccounts: () => void,
   loadTransactions: () => void
 };
 
 class Root extends Component<RootProps> {
-  static propTypes = {
-    accounts: PropTypes.object.isRequired,
-    fetchAccounts: PropTypes.func.isRequired,
-    loadTransactions: PropTypes.func.isRequired
-  };
-
   componentDidMount() {
     this.props.fetchAccounts();
     this.props.loadTransactions();
