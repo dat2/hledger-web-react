@@ -10,15 +10,12 @@ import { injectGlobal } from 'styled-components';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // local imports
 
 import configureStore from './configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
-import NotFound from './NotFound';
-import Dashboard from './Dashboard';
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
@@ -53,13 +50,7 @@ const store = configureStore({
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <Switch>
-        <Route exact path={'/'} component={Root.Container} />
-        <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
-        <Route component={NotFound.Component} />
-      </Switch>
-    </Router>
+    <Root.Container />
   </Provider>,
   document.getElementById('root')
 );
