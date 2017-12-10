@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
+import Charts from '../Charts';
 
 class Root extends Component {
   static propTypes = {
@@ -24,6 +25,7 @@ class Root extends Component {
       <Router>
         <Switch>
           <Route exact path={'/'} component={Accounts.Container} />
+          <Route exact path={'/chart'} component={Charts.Container} />
           <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
           <Route component={NotFound.Component} />
         </Switch>

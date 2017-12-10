@@ -1,5 +1,6 @@
 import { put, takeEvery } from 'redux-saga/effects';
 import startOfMonth from 'date-fns/start_of_month';
+import format from 'date-fns/format';
 import * as R from 'ramda';
 
 import Transactions from '../Transactions';
@@ -16,7 +17,7 @@ export default function* chartsSaga() {
 function* computeLineChartData({ payload: { data } }) {
   const monthlyTransactionAccounts = data.map(({ date, postings }) => ({
     accounts: flattenPostingsToRootAccounts(groupByRootAccount(postings)),
-    month: startOfMonth(date)
+    month: format(startOfMonth(date), 'YYYY-MM-DD')
   }));
 
   const monthlyAccountData = addDefaultValues(
@@ -55,11 +56,12 @@ const defaultRootAccounts = {
 
 const addDefaultValues = R.map(R.merge(defaultRootAccounts));
 
-const putDateIntoObject = R.mapObjIndexed((obj, key) =>
-  R.assoc('date', key, obj)
+const putDateIntoObject = R.mapObjIndexed((obj, value) =>
+  R.assoc('date', value, obj)
 );
 
 const makeLineChartData = R.compose(
+  R.map(R.head),
   R.map(R.tail),
   R.toPairs,
   putDateIntoObject

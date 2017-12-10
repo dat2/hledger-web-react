@@ -28,6 +28,12 @@ injectGlobal`
     font-size: 16px;
     font-family: ${system_ui}, sans-serif;
   }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
 `;
 
 if (process.env.NODE_ENV !== 'production') {
