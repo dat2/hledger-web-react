@@ -1,12 +1,10 @@
-import * as R from 'ramda';
-
 export const key = 'accounts';
 
-const localState = R.prop(key);
+const localState = state => state[key];
 
-const allAccounts = R.compose(R.prop('accounts'), localState);
+const allAccounts = accounts => accounts.accounts;
 
 export default {
   localState,
-  allAccounts
+  allAccounts: state => allAccounts(localState(state))
 };
