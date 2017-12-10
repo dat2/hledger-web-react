@@ -64,7 +64,7 @@ class AccountRow extends Component {
             <span>{name}</span>
             <span>
               {quantities.map((quantity, index) => (
-                <Quantity key={index} negative={quantity.amount < 0}>
+                <Quantity key={index} negative={quantity.quantity < 0}>
                   {quantity.format()}
                 </Quantity>
               ))}

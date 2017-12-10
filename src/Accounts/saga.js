@@ -1,5 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
+import { transformAmount } from '../Currency';
+
 import Actions from './actions';
 
 export default function* accountsSaga() {
@@ -24,20 +26,7 @@ function transformApiResponse(data) {
 function transformAccount(account) {
   return {
     name: account.aname,
-    quantities: account.aibalance.map(transformBalance),
+    quantities: account.aibalance.map(transformAmount),
     children: account.asubs.map(transformAccount)
-  };
-}
-
-function transformBalance(balance) {
-  return {
-    amount: balance.aquantity,
-    formatter: new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }),
-    format() {
-      return this.formatter.format(this.amount);
-    }
   };
 }
