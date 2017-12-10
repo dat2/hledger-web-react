@@ -15,64 +15,67 @@ export default function* chartsSaga() {
 }
 
 function* computeLineChartData({ payload: { data } }) {
-  const monthlyTransactionAccounts = data.map(({ date, postings }) => ({
-    accounts: flattenPostingsToRootAccounts(groupByRootAccount(postings)),
-    month: format(startOfMonth(date), 'YYYY-MM-DD')
-  }));
-
-  const monthlyAccountData = addDefaultValues(
-    flattenMonthlyAccounts(groupByMonth(monthlyTransactionAccounts))
-  );
-
-  const lineChartData = makeLineChartData(monthlyAccountData);
-
-  const accumulated = accumulateLineChartData(lineChartData);
-
-  yield put(Actions.computeLineChartData(accumulated));
+  yield put(Actions.computeLineChartData(makeLineChartData(data)));
 }
 
-const groupByRootAccount = R.groupBy(
-  R.compose(R.takeWhile(c => c !== ':'), R.prop('account'))
+// take a list of transactions, pick out the postings, and group them by month
+// [{postings:[], date}] -> {month:[postings]}
+const groupPostingsByMonth = R.reduceBy(
+  (acc, o) => acc.concat(o.postings),
+  [],
+  R.compose(date => format(date, 'YYYY-MM-DD'), startOfMonth, R.prop('date'))
 );
 
-const sumPostingAmounts = R.compose(
-  R.sum,
-  R.map(R.compose(Number, R.prop('amounts')))
-);
-
-const flattenPostingsToRootAccounts = R.map(sumPostingAmounts);
-
-const groupByMonth = R.groupBy(R.prop('month'));
-
-const flattenMonthlyAccounts = R.map(
-  R.compose(R.reduce(R.mergeWith(R.add), {}), R.map(R.prop('accounts')))
-);
-
-const defaultRootAccounts = {
-  assets: 0,
-  equity: 0,
-  expenses: 0,
-  income: 0,
-  liabilities: 0
-};
-
-const addDefaultValues = R.map(R.merge(defaultRootAccounts));
-
-const putDateIntoObject = R.mapObjIndexed((obj, value) =>
-  R.assoc('date', value, obj)
-);
-
-const makeLineChartData = R.compose(
-  R.map(R.head),
-  R.map(R.tail),
-  R.toPairs,
-  putDateIntoObject
-);
-
-const accumulateLineChartData = R.compose(
-  R.tail,
-  R.scan(
-    R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))),
-    defaultRootAccounts
+// take an array of postings, group them by rootAccount
+// {month:[{account, amounts}]} -> {month:{rootAccount:[amounts]}}
+const groupByRootAccounts = R.map(
+  R.reduceBy(
+    (acc, o) => acc.concat(o.amounts),
+    [],
+    R.compose(R.takeWhile(c => c !== ':'), R.prop('account'))
   )
+);
+
+// take an object of {rootAccount:[amounts]} and sum the amounts
+// {month:{rootAccount:[amounts]}} -> {month:{rootAccount:amount}}
+const sumAmounts = R.map(R.map(R.compose(R.sum, R.map(Number))));
+
+// take an object of {rootAccount:amount} and insert 0 for missing accounts
+// {month:{rootAccount:amount}} -> {month:{rootAccount:amount}}
+const insertDefaults = R.map(
+  R.merge({ assets: 0, equity: 0, expenses: 0, income: 0, liabilities: 0 })
+);
+
+// take an object of {month:{rootAccount:amount}} and insert month into the object
+// {month:{rootAccount:amount}} -> [{rootAccount:amount, month}]
+const unGroup = R.compose(
+  R.values,
+  R.mapObjIndexed((value, date) => R.assoc('date', date, value))
+);
+
+// take an array of [{rootAccount:amount, month}] and add each account with the
+// previous months total
+// [{rootAccount:amount, month}] -> [{rootAccount:amount, month}]
+// eg. [{assets:100, month: '2017-01-01'}, {assets:200, month:'2017-02-01'}, {assets:-100, month:'2017-03-01'}]
+//  => [{assets:100, month: '2017-01-01'}, {assets:300, month:'2017-02-01'}, {assets:200, month:'2017-03-01'}]
+const makeAccumulating = R.compose(
+  R.tail,
+  R.scan(R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))), {
+    assets: 0,
+    equity: 0,
+    expenses: 0,
+    income: 0,
+    liabilities: 0
+  })
+);
+
+// take a list of transactions, turn them into [{rootAccount:amount, month}]
+// for the line chart to display
+const makeLineChartData = R.compose(
+  makeAccumulating,
+  unGroup,
+  insertDefaults,
+  sumAmounts,
+  groupByRootAccounts,
+  groupPostingsByMonth
 );
