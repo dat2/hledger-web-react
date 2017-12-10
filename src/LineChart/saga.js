@@ -40,17 +40,23 @@ const groupByRootAccounts = R.map(
 // {month:{rootAccount:[amounts]}} -> {month:{rootAccount:amount}}
 const sumAmounts = R.map(R.map(R.compose(R.sum, R.map(Number))));
 
+const defaultRootAccounts = {
+  assets: 0,
+  equity: 0,
+  expenses: 0,
+  income: 0,
+  liabilities: 0
+};
+
 // take an object of {rootAccount:amount} and insert 0 for missing accounts
 // {month:{rootAccount:amount}} -> {month:{rootAccount:amount}}
-const insertDefaults = R.map(
-  R.merge({ assets: 0, equity: 0, expenses: 0, income: 0, liabilities: 0 })
-);
+const insertDefaults = R.map(R.merge(defaultRootAccounts));
 
 // take an object of {month:{rootAccount:amount}} and insert month into the object
 // {month:{rootAccount:amount}} -> [{rootAccount:amount, month}]
 const unGroup = R.compose(
   R.values,
-  R.mapObjIndexed((value, date) => R.assoc('date', date, value))
+  R.mapObjIndexed((value, date) => R.assoc('month', date, value))
 );
 
 // take an array of [{rootAccount:amount, month}] and add each account with the
@@ -60,13 +66,11 @@ const unGroup = R.compose(
 //  => [{assets:100, month: '2017-01-01'}, {assets:300, month:'2017-02-01'}, {assets:200, month:'2017-03-01'}]
 const makeAccumulating = R.compose(
   R.tail,
-  R.scan(R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))), {
-    assets: 0,
-    equity: 0,
-    expenses: 0,
-    income: 0,
-    liabilities: 0
-  })
+  // the R.is(String) handles the 'month' key
+  R.scan(
+    R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))),
+    defaultRootAccounts
+  )
 );
 
 // take a list of transactions, turn them into [{rootAccount:amount, month}]
