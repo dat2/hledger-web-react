@@ -1,14 +1,53 @@
+// 3rd-party imports
+
+import "normalize.css";
+import "sanitize.css";
+import "tachyons";
+
+import system_ui from "system-ui";
+
+import { injectGlobal } from "styled-components";
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import 'sanitize.css';
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+// local imports
 
 import configureStore from './configureStore';
 import registerServiceWorker from './registerServiceWorker';
 
+import NotFound from "./not_found";
+import Dashboard from "./dashboard";
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
+
+// globals
+
+injectGlobal`
+  body {
+    font-size: 16px;
+    font-family: ${system_ui}, sans-serif;
+  }
+`;
+
+
+if (process.env.NODE_ENV !== "production") {
+  // CSS debug outline
+  // ref: http://tachyons.io/docs/debug/
+
+  const DEBUG = false;
+  if (DEBUG) {
+    injectGlobal`
+      * { outline: 1px solid gold; }
+      `;
+  }
+}
+
+// setup
 
 const store = configureStore({
   reducers: { [Accounts.key]: Accounts.reducer },
@@ -17,7 +56,16 @@ const store = configureStore({
 
 ReactDOM.render(
   <Provider store={store}>
-    <Root.Container />
+    <Router>
+      <Switch>
+        <Route exact path={'/'} component={Root.Container} />
+        <Route
+          exact path={'/ui-proposal'}
+          component={Dashboard}
+        />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
   </Provider>,
   document.getElementById('root')
 );
