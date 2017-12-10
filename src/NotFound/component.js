@@ -1,3 +1,5 @@
+// @flow
+
 // 3rd-party imports
 
 import React from 'react';

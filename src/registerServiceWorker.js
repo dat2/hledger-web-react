@@ -1,3 +1,5 @@
+// @flow
+
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -20,6 +22,10 @@ const isLocalhost = Boolean(
 
 export default function register() {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    if (!process.env.PUBLIC_URL) {
+      return;
+    }
+
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
     if (publicUrl.origin !== window.location.origin) {
@@ -30,7 +36,7 @@ export default function register() {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `${String(process.env.PUBLIC_URL)}/service-worker.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
@@ -44,6 +50,10 @@ export default function register() {
 }
 
 function registerValidSW(swUrl) {
+  if (!navigator.serviceWorker) {
+    return;
+  }
+
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
@@ -51,7 +61,7 @@ function registerValidSW(swUrl) {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
+            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
               // At this point, the old content will have been purged and
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
@@ -76,6 +86,10 @@ function checkValidServiceWorker(swUrl) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl)
     .then(response => {
+      if (!navigator.serviceWorker) {
+        return;
+      }
+
       // Ensure service worker exists, and that we really are getting a JS file.
       if (
         response.status === 404 ||
@@ -100,6 +114,10 @@ function checkValidServiceWorker(swUrl) {
 }
 
 export function unregister() {
+  if (!navigator.serviceWorker) {
+    return;
+  }
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
       registration.unregister();
