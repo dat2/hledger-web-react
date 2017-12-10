@@ -31,7 +31,7 @@
     "pretty": "prettier --single-quote --write 'src/**/*.js'",
     "precommit": "lint-staged",
     "flow": "flow",
-    "flow-annotation-check": "flow-annotation-check --list-files=noflow src"
+    "flow-annotation-check": "cd src/;flow-annotation-check --list-files=noflow"
   },
   "devDependencies": {
     "flow-annotation-check": "^1.7.0",
