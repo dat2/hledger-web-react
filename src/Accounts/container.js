@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 import selectors from './selectors';
 import component from './component';
