@@ -57,7 +57,7 @@ class AccountRow extends Component<AccountRowProps, AccountRowState> {
   };
 
   render() {
-    const { name, currencies, children } = this.props.account;
+    const { name, amounts, children } = this.props.account;
 
     return (
       <List onClick={this.toggleHidden} hasChildren={children.length > 0}>
@@ -65,9 +65,9 @@ class AccountRow extends Component<AccountRowProps, AccountRowState> {
           <Row>
             <span>{name}</span>
             <span>
-              {currencies.map((currency, index) => (
-                <Quantity key={index} negative={currency.quantity < 0}>
-                  {new Currency(currency).format()}
+              {amounts.map((amount, index) => (
+                <Quantity key={index} negative={amount.quantity < 0}>
+                  {new Currency(amount).format()}
                 </Quantity>
               ))}
             </span>

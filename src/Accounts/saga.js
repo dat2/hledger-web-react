@@ -3,8 +3,8 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 
-import { Currency } from '../Currency';
-import type { HledgerAmount, CurrencyObject } from '../Currency';
+import { transformAmount } from '../Currency';
+import type { HledgerAmount, Amount } from '../Currency';
 
 import Actions from './actions';
 
@@ -16,7 +16,7 @@ type HledgerAccount = {
 
 export type Account = {
   name: string,
-  currencies: Array<CurrencyObject>,
+  amounts: Array<Amount>,
   children: Array<Account>
 };
 
@@ -42,7 +42,7 @@ function transformApiResponse(data) {
 function transformAccount(account: HledgerAccount) {
   return {
     name: account.aname,
-    currencies: account.aibalance.map(Currency.transform),
+    amounts: account.aibalance.map(transformAmount),
     children: account.asubs.map(transformAccount)
   };
 }

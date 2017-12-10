@@ -12,11 +12,12 @@ export type HledgerAmountStyle = {
 };
 
 export type HledgerAmount = {
+  acommodity: string,
   aquantity: string,
   astyle: HledgerAmountStyle
 };
 
-export type CurrencyStyle = {
+export type AmountStyle = {
   side: 'L' | 'R',
   spaced: boolean,
   decimalPoint: string,
@@ -25,10 +26,10 @@ export type CurrencyStyle = {
   numDigitsInGroup: number
 };
 
-export type CurrencyObject = {
+export type Amount = {
   symbol: string,
   quantity: number,
-  style: CurrencyStyle
+  style: AmountStyle
 };
 
 function* chunksGenerator(iterable, n) {
@@ -40,30 +41,11 @@ function* chunksGenerator(iterable, n) {
 const chunks = (...args) => Array.from(chunksGenerator(...args));
 
 export class Currency {
-  static transform(amount: HledgerAmount) {
-    return {
-      symbol: amount.acommodity ? amount.acommodity : '$',
-      quantity: Number(amount.aquantity),
-      style: {
-        side: amount.astyle.ascommodityside,
-        spaced: amount.astyle.ascommodityspaced,
-        decimalPoint: amount.astyle.asdecimalpoint,
-        precision: Number(amount.astyle.asprecision) || 2,
-        digitSeparator: amount.astyle.asdigitgroups
-          ? amount.astyle.asdigitgroups[0]
-          : ',',
-        numDigitsInGroup: amount.astyle.asdigitgroups
-          ? amount.astyle.asdigitgroups[1]
-          : 3
-      }
-    };
-  }
-
   symbol: string;
   quantity: number;
-  style: CurrencyStyle;
+  style: AmountStyle;
 
-  constructor(currency: CurrencyObject) {
+  constructor(currency: Amount) {
     this.symbol = currency.symbol;
     this.quantity = currency.quantity;
     this.style = currency.style;
@@ -111,4 +93,23 @@ export class Currency {
       ? (this.style.spaced ? ' ' : '') + this.symbol
       : '';
   }
+}
+
+export function transformAmount(amount: HledgerAmount): Amount {
+  return {
+    symbol: amount.acommodity ? amount.acommodity : '$',
+    quantity: Number(amount.aquantity),
+    style: {
+      side: amount.astyle.ascommodityside,
+      spaced: amount.astyle.ascommodityspaced,
+      decimalPoint: amount.astyle.asdecimalpoint,
+      precision: Number(amount.astyle.asprecision) || 2,
+      digitSeparator: amount.astyle.asdigitgroups
+        ? amount.astyle.asdigitgroups[0]
+        : ',',
+      numDigitsInGroup: amount.astyle.asdigitgroups
+        ? amount.astyle.asdigitgroups[1]
+        : 3
+    }
+  };
 }

@@ -4,7 +4,8 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import localforage from 'localforage';
 
-import { Currency } from '../Currency';
+import { transformAmount } from '../Currency';
+import type { HledgerAmount, Amount } from '../Currency';
 import Actions from './actions';
 
 export default function* transactionsSaga(): Saga<void> {
@@ -39,11 +40,33 @@ function* fetchTransactions(): Saga<void> {
   }
 }
 
+type HledgerTransaction = {
+  tdate: string,
+  tdescription: string,
+  tpostings: Array<HledgerPosting>
+};
+
+type Transaction = {
+  date: string,
+  description: string,
+  postings: Array<Posting>
+};
+
+type HledgerPosting = {
+  paccount: string,
+  pamount: Array<HledgerAmount>
+};
+
+type Posting = {
+  account: string,
+  amounts: Array<Amount>
+};
+
 function transformApiResponse(data) {
   return data.map(transformTransaction);
 }
 
-function transformTransaction(transaction) {
+function transformTransaction(transaction: HledgerTransaction): Transaction {
   return {
     date: transaction.tdate,
     description: transaction.tdescription,
@@ -51,10 +74,10 @@ function transformTransaction(transaction) {
   };
 }
 
-function transformPosting(posting) {
+function transformPosting(posting: HledgerPosting): Posting {
   return {
     account: posting.paccount,
-    amounts: posting.pamount.map(Currency.transform)
+    amounts: posting.pamount.map(transformAmount)
   };
 }
 
