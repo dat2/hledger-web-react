@@ -31,6 +31,13 @@ function transformAccount(account) {
 
 function transformBalance(balance) {
   return {
-    amount: balance.aquantity
+    amount: balance.aquantity,
+    formatter: new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }),
+    format() {
+      return this.formatter.format(this.amount);
+    }
   };
 }
