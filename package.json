@@ -4,11 +4,9 @@
   "private": true,
   "dependencies": {
     "date-fns": "^1.29.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^6.0.0",
     "localforage": "^1.5.5",
+    "lodash.padend": "^4.6.1",
     "normalize.css": "^7.0.0",
-    "prop-types": "^15.6.0",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -31,9 +29,15 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "pretty": "prettier --single-quote --write 'src/**/*.js'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "flow": "flow",
+    "flow-annotation-check": "flow-annotation-check --list-files=noflow src"
   },
   "devDependencies": {
+    "flow-annotation-check": "^1.7.0",
+    "flow-bin": "^0.61.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^6.0.0",
     "prettier": "^1.8.2",
     "react-scripts": "1.0.17"
   },

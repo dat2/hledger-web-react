@@ -1,3 +1,5 @@
+// @flow
+
 // 3rd-party imports
 import React from 'react';
 import {
@@ -12,13 +14,15 @@ import {
 } from 'recharts';
 import styled from 'styled-components';
 
+import type { ChartViewProps } from './types';
+
 const HiddenOverflow = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
 `;
 
-const ChartView = ({ data }) => (
+const ChartView = ({ data }: ChartViewProps) => (
   <HiddenOverflow>
     <ResponsiveContainer>
       <LineChart data={data}>

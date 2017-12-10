@@ -1,12 +1,14 @@
+// @flow
+
 import { connect } from 'react-redux';
 
-import Selectors from './selectors';
-import Component from './component';
+import selectors from './selectors';
+import component from './component';
 
 function mapStateToProps(state) {
   return {
-    data: Selectors.lineChartData(state)
+    data: selectors.lineChartData(state)
   };
 }
 
-export default connect(mapStateToProps)(Component);
+export default connect(mapStateToProps)(component);

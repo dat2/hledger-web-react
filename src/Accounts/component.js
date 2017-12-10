@@ -1,24 +1,21 @@
-import PropTypes from 'prop-types';
+// @flow
+
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Currency } from '../Currency';
+import type {
+  AccountsViewProps,
+  AccountRowProps,
+  AccountRowState
+} from './types';
 
-const accountType = PropTypes.object;
-
-class AccountsView extends Component {
-  static propTypes = {
-    accounts: PropTypes.arrayOf(accountType).isRequired
-  };
-
-  render() {
-    return (
-      <div>
-        {this.props.accounts.map(account => (
-          <AccountRow account={account} key={account.name} />
-        ))}
-      </div>
-    );
-  }
-}
+const AccountsView = (props: AccountsViewProps) => (
+  <div>
+    {props.accounts.map(account => (
+      <AccountRow account={account} key={account.name} />
+    ))}
+  </div>
+);
 
 const Row = styled.div`
   display: flex;
@@ -39,11 +36,7 @@ const Quantity = styled.span`
   color: ${props => (props.negative ? 'red' : 'inherit')};
 `;
 
-class AccountRow extends Component {
-  static propTypes = {
-    account: accountType.isRequired
-  };
-
+class AccountRow extends Component<AccountRowProps, AccountRowState> {
   state = {
     hidden: false
   };
@@ -55,7 +48,7 @@ class AccountRow extends Component {
   };
 
   render() {
-    const { name, quantities, children } = this.props.account;
+    const { name, amounts, children } = this.props.account;
 
     return (
       <List onClick={this.toggleHidden} hasChildren={children.length > 0}>
@@ -63,9 +56,9 @@ class AccountRow extends Component {
           <Row>
             <span>{name}</span>
             <span>
-              {quantities.map((quantity, index) => (
-                <Quantity key={index} negative={quantity.amount < 0}>
-                  {quantity.format()}
+              {amounts.map((amount, index) => (
+                <Quantity key={index} negative={amount.quantity < 0}>
+                  {new Currency(amount).format()}
                 </Quantity>
               ))}
             </span>

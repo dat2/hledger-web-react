@@ -1,3 +1,5 @@
+// @flow
+
 // 3rd-party imports
 
 import 'normalize.css';
@@ -58,11 +60,19 @@ const store = configureStore({
   sagas: [Accounts.saga, Transactions.saga, LineChart.saga]
 });
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Root.Container />
-  </Provider>,
-  document.getElementById('root')
-);
+const root_mount = document.getElementById('root');
+
+if (root_mount) {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Root.Container />
+    </Provider>,
+    root_mount
+  );
+} else {
+  if (process.env.NODE_ENV !== 'production') {
+    throw Error('Cannot find DOM element with id: root');
+  }
+}
 
 registerServiceWorker();

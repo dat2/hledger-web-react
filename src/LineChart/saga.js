@@ -1,20 +1,25 @@
+// @flow
+
 import { put, takeEvery } from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import startOfMonth from 'date-fns/start_of_month';
 import format from 'date-fns/format';
 import * as R from 'ramda';
 
 import Transactions from '../Transactions';
+import type { Transaction } from '../Transactions/types';
 
 import Actions from './actions';
+import type { DataPoint } from './types';
 
-export default function* chartsSaga() {
+export default function* chartsSaga(): Saga<void> {
   yield takeEvery(
     Transactions.actions.loadTransactionsSuccess,
     computeLineChartData
   );
 }
 
-function* computeLineChartData({ payload: { data } }) {
+function* computeLineChartData({ payload: { data } }): Saga<void> {
   yield put(Actions.computeLineChartData(makeLineChartData(data)));
 }
 
@@ -75,7 +80,7 @@ const makeAccumulating = R.compose(
 
 // take a list of transactions, turn them into [{rootAccount:amount, month}]
 // for the line chart to display
-const makeLineChartData = R.compose(
+const makeLineChartData: (Array<Transaction>) => Array<DataPoint> = R.compose(
   makeAccumulating,
   unGroup,
   insertDefaults,

@@ -1,9 +1,19 @@
+// @flow
+
 import { all, call, put, takeEvery } from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import localforage from 'localforage';
 
+import { transformAmount } from '../Currency';
 import Actions from './actions';
+import type {
+  HledgerTransaction,
+  Transaction,
+  HledgerPosting,
+  Posting
+} from './types';
 
-export default function* transactionsSaga() {
+export default function* transactionsSaga(): Saga<void> {
   yield all([
     takeEvery(Actions.loadTransactions, getTransactions),
     takeEvery(Actions.fetchTransactions, fetchTransactions),
@@ -11,7 +21,7 @@ export default function* transactionsSaga() {
   ]);
 }
 
-function* getTransactions() {
+function* getTransactions(): Saga<void> {
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {
     yield put(
@@ -22,7 +32,7 @@ function* getTransactions() {
   }
 }
 
-function* fetchTransactions() {
+function* fetchTransactions(): Saga<void> {
   try {
     // just in case things are updated, we'll just dispatch it twice, and let things
     // like reselect prevent re-renders
@@ -39,7 +49,7 @@ function transformApiResponse(data) {
   return data.map(transformTransaction);
 }
 
-function transformTransaction(transaction) {
+function transformTransaction(transaction: HledgerTransaction): Transaction {
   return {
     date: transaction.tdate,
     description: transaction.tdescription,
@@ -47,17 +57,13 @@ function transformTransaction(transaction) {
   };
 }
 
-function transformPosting(posting) {
+function transformPosting(posting: HledgerPosting): Posting {
   return {
     account: posting.paccount,
     amounts: posting.pamount.map(transformAmount)
   };
 }
 
-function transformAmount(amount) {
-  return amount.aquantity;
-}
-
-function* cacheTransactions({ payload: { data } }) {
+function* cacheTransactions({ payload: { data } }): Saga<void> {
   yield call(() => localforage.setItem('transactions', data));
 }
