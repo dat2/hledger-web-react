@@ -19,7 +19,7 @@ import registerServiceWorker from './registerServiceWorker';
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
-import Charts from './Charts';
+import LineChart from './LineChart';
 
 // globals
 
@@ -51,8 +51,11 @@ if (process.env.NODE_ENV !== 'production') {
 // setup
 
 const store = configureStore({
-  reducers: { [Accounts.key]: Accounts.reducer, [Charts.key]: Charts.reducer },
-  sagas: [Accounts.saga, Transactions.saga, Charts.saga]
+  reducers: {
+    [Accounts.key]: Accounts.reducer,
+    [LineChart.key]: LineChart.reducer
+  },
+  sagas: [Accounts.saga, Transactions.saga, LineChart.saga]
 });
 
 ReactDOM.render(
