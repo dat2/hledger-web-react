@@ -2,9 +2,9 @@
 
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
-
 import localforage from 'localforage';
 
+import { Currency } from '../Currency';
 import Actions from './actions';
 
 export default function* transactionsSaga(): Saga<void> {
@@ -54,12 +54,8 @@ function transformTransaction(transaction) {
 function transformPosting(posting) {
   return {
     account: posting.paccount,
-    amounts: posting.pamount.map(transformAmount)
+    amounts: posting.pamount.map(Currency.transform)
   };
-}
-
-function transformAmount(amount) {
-  return amount.aquantity;
 }
 
 function* cacheTransactions({ payload: { data } }): Saga<void> {
