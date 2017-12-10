@@ -5,13 +5,11 @@ import 'sanitize.css';
 import 'tachyons';
 
 import system_ui from 'system-ui';
-
 import { injectGlobal } from 'styled-components';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // local imports
@@ -58,8 +56,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route exact path={'/'} component={Root.Container} />
-        <Route exact path={'/ui-proposal'} component={Dashboard.Container} />
-        <Route component={NotFound.Container} />
+        <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
+        <Route component={NotFound.Component} />
       </Switch>
     </Router>
   </Provider>,
