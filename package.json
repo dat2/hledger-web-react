@@ -27,7 +27,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "pretty": "prettier --single-quote --write 'src/**/*.js'"
+    "pretty": "prettier --single-quote --write 'src/**/*.js'",
+    "precommit": "lint-staged"
   },
   "devDependencies": {
     "prettier": "^1.8.2",
