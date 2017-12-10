@@ -3,6 +3,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 
+import { transformAmount } from '../Currency';
+import type { HledgerAccount } from './types';
+
 import Actions from './actions';
 
 export default function* accountsSaga(): Saga<void> {
@@ -24,23 +27,10 @@ function transformApiResponse(data) {
   return data.map(transformAccount);
 }
 
-function transformAccount(account) {
+function transformAccount(account: HledgerAccount) {
   return {
     name: account.aname,
-    quantities: account.aibalance.map(transformBalance),
+    amounts: account.aibalance.map(transformAmount),
     children: account.asubs.map(transformAccount)
-  };
-}
-
-function transformBalance(balance) {
-  return {
-    amount: balance.aquantity,
-    formatter: new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }),
-    format() {
-      return this.formatter.format(this.amount);
-    }
   };
 }

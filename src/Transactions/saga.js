@@ -2,10 +2,16 @@
 
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
-
 import localforage from 'localforage';
 
+import { transformAmount } from '../Currency';
 import Actions from './actions';
+import type {
+  HledgerTransaction,
+  Transaction,
+  HledgerPosting,
+  Posting
+} from './types';
 
 export default function* transactionsSaga(): Saga<void> {
   yield all([
@@ -15,7 +21,7 @@ export default function* transactionsSaga(): Saga<void> {
   ]);
 }
 
-function* getTransactions(): Saga<void>  {
+function* getTransactions(): Saga<void> {
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {
     yield put(
@@ -43,7 +49,7 @@ function transformApiResponse(data) {
   return data.map(transformTransaction);
 }
 
-function transformTransaction(transaction) {
+function transformTransaction(transaction: HledgerTransaction): Transaction {
   return {
     date: transaction.tdate,
     description: transaction.tdescription,
@@ -51,15 +57,11 @@ function transformTransaction(transaction) {
   };
 }
 
-function transformPosting(posting) {
+function transformPosting(posting: HledgerPosting): Posting {
   return {
     account: posting.paccount,
     amounts: posting.pamount.map(transformAmount)
   };
-}
-
-function transformAmount(amount) {
-  return amount.aquantity;
 }
 
 function* cacheTransactions({ payload: { data } }): Saga<void> {
