@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import 'sanitize.css';
 
-import { RootContainer, RootReducer, RootSaga } from './Root';
 import configureStore from './configureStore';
+import { RootContainer } from './Root';
+import Accounts from './Accounts';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore({
-  reducers: { root: RootReducer },
-  sagas: [RootSaga]
+  reducers: { [Accounts.key]: Accounts.reducer },
+  sagas: [Accounts.saga]
 });
 
 ReactDOM.render(

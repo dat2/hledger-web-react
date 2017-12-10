@@ -5,23 +5,12 @@ import Actions from './Root.actions';
 
 export default function* rootSaga() {
   yield all([
-    takeEvery(Actions.fetchAccountNames, fetchAccountNames),
     takeEvery(Actions.loadTransactions, loadTransactions),
     takeEvery(Actions.loadTransactionsCacheMiss, fetchTransactions),
     takeEvery(Actions.fetchTransactions, fetchTransactions),
     takeEvery(Actions.loadTransactionsSuccess, cacheTransactions),
     takeEvery(Actions.invalidateTransactionsCache, invalidateTransactionsCache)
   ]);
-}
-
-function* fetchAccountNames() {
-  try {
-    const response = yield call(fetch, '/api/v1/accountnames');
-    const json = yield call(() => response.json());
-    yield put(Actions.fetchAccountNamesSuccess(json));
-  } catch (e) {
-    yield put(Actions.fetchAccountNamesFailed(e));
-  }
 }
 
 function* loadTransactions() {

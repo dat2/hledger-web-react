@@ -1,9 +1,6 @@
 import { createActions } from 'redux-actions';
 
 export default createActions(
-  'FETCH_ACCOUNT_NAMES',
-  'FETCH_ACCOUNT_NAMES_SUCCESS',
-  'FETCH_ACCOUNT_NAMES_FAILED',
   'LOAD_TRANSACTIONS',
   'LOAD_TRANSACTIONS_CACHE_MISS',
   'FETCH_TRANSACTIONS',
