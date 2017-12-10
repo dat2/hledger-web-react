@@ -7,7 +7,7 @@ const accountType = PropTypes.object;
 class AccountsView extends Component {
   static propTypes = {
     accounts: PropTypes.arrayOf(accountType).isRequired,
-    fetchAccounts: PropTypes.func.isRequired,
+    fetchAccounts: PropTypes.func.isRequired
   };
 
   componentDidMount() {

@@ -45,7 +45,7 @@ if (process.env.NODE_ENV !== 'production') {
 // setup
 
 const store = configureStore({
-  reducers: { [Accounts.key]: Accounts.reducer },
+  reducers: { [Accounts.key]: Accounts.reducer, [Charts.key]: Charts.reducer },
   sagas: [Accounts.saga, Transactions.saga, Charts.saga]
 });
 

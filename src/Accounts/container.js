@@ -12,9 +12,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchAccounts: Actions.fetchAccounts
-  }, dispatch);
+  return bindActionCreators(
+    {
+      fetchAccounts: Actions.fetchAccounts
+    },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(component);
