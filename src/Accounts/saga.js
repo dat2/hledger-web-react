@@ -4,7 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 
 import { transformAmount } from '../Currency';
-import type { HledgerAmount, Amount } from '../Currency';
+import type { HledgerAmount, Amount } from '../Currency/types';
 
 import Actions from './actions';
 

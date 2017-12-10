@@ -5,8 +5,13 @@ import type { Saga } from 'redux-saga';
 import localforage from 'localforage';
 
 import { transformAmount } from '../Currency';
-import type { HledgerAmount, Amount } from '../Currency';
 import Actions from './actions';
+import type {
+  HledgerTransaction,
+  Transaction,
+  HledgerPosting,
+  Posting
+} from './types';
 
 export default function* transactionsSaga(): Saga<void> {
   yield all([
@@ -39,28 +44,6 @@ function* fetchTransactions(): Saga<void> {
     yield put(Actions.loadTransactionsFailed(e));
   }
 }
-
-type HledgerTransaction = {
-  tdate: string,
-  tdescription: string,
-  tpostings: Array<HledgerPosting>
-};
-
-type Transaction = {
-  date: string,
-  description: string,
-  postings: Array<Posting>
-};
-
-type HledgerPosting = {
-  paccount: string,
-  pamount: Array<HledgerAmount>
-};
-
-type Posting = {
-  account: string,
-  amounts: Array<Amount>
-};
 
 function transformApiResponse(data) {
   return data.map(transformTransaction);

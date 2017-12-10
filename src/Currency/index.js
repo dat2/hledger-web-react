@@ -3,34 +3,7 @@
 import * as R from 'ramda';
 import padEnd from 'lodash.padend';
 
-export type HledgerAmountStyle = {
-  ascommodityside: 'L' | 'R',
-  ascommodityspaced: boolean,
-  asdecimalpoint: string,
-  asdigitgroups?: [string, number],
-  asprecision: string
-};
-
-export type HledgerAmount = {
-  acommodity: string,
-  aquantity: string,
-  astyle: HledgerAmountStyle
-};
-
-export type AmountStyle = {
-  side: 'L' | 'R',
-  spaced: boolean,
-  decimalPoint: string,
-  precision: number,
-  digitSeparator: string,
-  numDigitsInGroup: number
-};
-
-export type Amount = {
-  symbol: string,
-  quantity: number,
-  style: AmountStyle
-};
+import type { HledgerAmount, Amount, AmountStyle } from './types';
 
 function* chunksGenerator(iterable, n) {
   for (let i = 0; i < iterable.length / n; i++) {
@@ -51,17 +24,17 @@ export class Currency {
     this.style = currency.style;
   }
 
-  format() {
+  format(): string {
     return `${this.formatPrefix()}${this.formatNumber()}${this.formatSuffix()}`;
   }
 
-  formatPrefix() {
+  formatPrefix(): string {
     return this.style.side === 'L'
       ? this.symbol + (this.style.spaced ? ' ' : '')
       : '';
   }
 
-  formatNumber() {
+  formatNumber(): string {
     const string = this.quantity.toString();
     const [integer, fractionalMaybe] = string.split('.');
     const fractional = padEnd(
@@ -74,7 +47,7 @@ export class Currency {
     }${this.formatFractional(fractional)}`;
   }
 
-  formatInteger(integer: string) {
+  formatInteger(integer: string): string {
     return R.reverse(
       chunks(R.reverse(integer), this.style.numDigitsInGroup).join(
         this.style.digitSeparator
@@ -82,13 +55,13 @@ export class Currency {
     );
   }
 
-  formatFractional(fractional: string) {
+  formatFractional(fractional: string): string {
     // for now, just truncate
     // TODO handle rounding
     return fractional.substring(0, this.style.precision);
   }
 
-  formatSuffix() {
+  formatSuffix(): string {
     return this.style.side === 'R'
       ? (this.style.spaced ? ' ' : '') + this.symbol
       : '';
