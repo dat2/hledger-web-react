@@ -3,10 +3,21 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
+import type { Saga } from 'redux-saga';
 import logger from 'redux-logger';
 
+type ReducerKeys = 'accounts';
+
+type LocalSagas = () => Saga<void>;
+
+type StoreConfig = {
+  reducers: { [ReducerKeys]: boolean },
+  initialState?: void,
+  sagas: Array<LocalSagas>
+};
+
 export default function configureStore(
-  { reducers = {}, initialState = undefined, sagas = [] } = {}
+  { reducers = {}, initialState = undefined, sagas = [] }: StoreConfig = {}
 ) {
   const sagaMiddleware = createSagaMiddleware();
 
