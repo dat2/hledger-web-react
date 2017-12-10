@@ -1,9 +1,9 @@
-import { all, call, put, take, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 import localforage from 'localforage';
 
-import Actions from './Root.actions';
+import Actions from './actions';
 
-export default function* rootSaga() {
+export default function* transactionsSaga() {
   yield all([
     takeEvery(Actions.loadTransactions, loadTransactions),
     takeEvery(Actions.loadTransactionsCacheMiss, fetchTransactions),
@@ -14,8 +14,6 @@ export default function* rootSaga() {
 }
 
 function* loadTransactions() {
-  yield take(Actions.fetchAccountNamesSuccess);
-
   // fetch from cache
   const cached = yield call(() => localforage.getItem('transactions'));
   if (cached) {

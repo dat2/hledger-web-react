@@ -1,5 +1,3 @@
-import RootContainer from './Root.container';
-import RootComponent from './Root.component';
-import RootSaga from './Root.saga';
+import Container from './container';
 
-export { RootContainer, RootComponent, RootSaga };
+export default { Container };

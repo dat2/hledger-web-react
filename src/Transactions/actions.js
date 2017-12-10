@@ -7,5 +7,5 @@ export default createActions(
   'LOAD_TRANSACTIONS_SUCCESS',
   'LOAD_TRANSACTIONS_FAILED',
   'INVALIDATE_TRANSACTIONS_CACHE',
-  { namespace: '/ROOT/' }
+  { namespace: '/TRANSACTIONS/' }
 );

@@ -4,18 +4,20 @@ import { Provider } from 'react-redux';
 import 'sanitize.css';
 
 import configureStore from './configureStore';
-import { RootContainer } from './Root';
-import Accounts from './Accounts';
 import registerServiceWorker from './registerServiceWorker';
+
+import Root from './Root';
+import Accounts from './Accounts';
+import Transactions from './Transactions';
 
 const store = configureStore({
   reducers: { [Accounts.key]: Accounts.reducer },
-  sagas: [Accounts.saga]
+  sagas: [Accounts.saga, Transactions.saga]
 });
 
 ReactDOM.render(
   <Provider store={store}>
-    <RootContainer />
+    <Root.Container />
   </Provider>,
   document.getElementById('root')
 );
