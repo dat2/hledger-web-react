@@ -1,14 +1,12 @@
-// @flow
-
-import type { StoreState } from '../configureStore';
+import * as R from 'ramda';
 
 export const key = 'accounts';
 
-const localState = (state: StoreState) => state[key];
+const localState = R.prop(key);
 
-const allAccounts = accounts => accounts.accounts;
+const allAccounts = R.prop('accounts');
 
 export default {
   localState,
-  allAccounts: (state: StoreState) => allAccounts(localState(state))
+  allAccounts: R.compose(allAccounts, localState)
 };
