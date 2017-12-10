@@ -1,10 +1,17 @@
+// @flow
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const accountType = PropTypes.object;
 
-class AccountsView extends Component {
+type AccountsViewProps = {
+  // TODO: change type
+  accounts: Array<{ +name: string | number }>
+};
+
+class AccountsView extends Component<AccountsViewProps> {
   static propTypes = {
     accounts: PropTypes.arrayOf(accountType).isRequired
   };
@@ -39,7 +46,16 @@ const Quantity = styled.span`
   color: ${props => (props.negative ? 'red' : 'inherit')};
 `;
 
-class AccountRow extends Component {
+type AccountRowProps = {
+  // TODO: change type
+  account: any
+};
+
+type AccountRowState = {
+  hidden: boolean
+};
+
+class AccountRow extends Component<AccountRowProps, AccountRowState> {
   static propTypes = {
     account: accountType.isRequired
   };

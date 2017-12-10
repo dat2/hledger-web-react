@@ -1,3 +1,5 @@
+// @flow
+
 // 3rd-party imports
 
 import PropTypes from 'prop-types';
@@ -10,7 +12,14 @@ import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
 
-class Root extends Component {
+type RootProps = {
+  // TODO: change this type
+  accounts: any,
+  fetchAccounts: () => void,
+  loadTransactions: () => void
+};
+
+class Root extends Component<RootProps> {
   static propTypes = {
     accounts: PropTypes.object.isRequired,
     fetchAccounts: PropTypes.func.isRequired,
