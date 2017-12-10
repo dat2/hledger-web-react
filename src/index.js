@@ -9,10 +9,11 @@ import registerServiceWorker from './registerServiceWorker';
 import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
+import Charts from './Charts';
 
 const store = configureStore({
   reducers: { [Accounts.key]: Accounts.reducer },
-  sagas: [Accounts.saga, Transactions.saga]
+  sagas: [Accounts.saga, Transactions.saga, Charts.saga]
 });
 
 ReactDOM.render(
