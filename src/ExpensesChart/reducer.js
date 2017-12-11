@@ -10,7 +10,7 @@ const initialState = {
 
 export default handleActions(
   {
-    [Actions.computeLineChartData]: (state, action) => ({
+    [Actions.computeExpensesChartData]: (state, action) => ({
       ...state,
       data: action.payload
     })

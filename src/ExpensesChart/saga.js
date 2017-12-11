@@ -9,14 +9,24 @@ import isEqual from 'date-fns/is_equal';
 import startOfMonth from 'date-fns/start_of_month';
 import endOfMonth from 'date-fns/end_of_month';
 import addDays from 'date-fns/add_days';
-import subDays from 'date-fns/sub_days';
 import subMonths from 'date-fns/sub_months';
 import format from 'date-fns/format';
 
 import * as R from 'ramda';
 
 import Transactions from '../Transactions';
-import type { Transaction } from '../Transactions/types';
+import Actions from './actions';
+
+export default function* expensesSaga(): Saga<void> {
+  yield takeEvery(
+    Transactions.actions.loadTransactionsSuccess,
+    computeExpensesChartData
+  );
+}
+
+function* computeExpensesChartData({ payload: { data } }): Saga<void> {
+  yield put(Actions.computeExpensesChartData(makeExpensesChartData(data)));
+}
 
 const gte = R.curry((a, b) => isAfter(a, b) || isEqual(a, b));
 const lte = R.curry((a, b) => isBefore(a, b) || isEqual(a, b));
@@ -30,18 +40,6 @@ function* dayRangeGenerator(startDate, endDate) {
 }
 
 const dayRange = (...args) => Array.from(dayRangeGenerator(...args));
-
-export default function* expensesSaga(): Saga<void> {
-  yield takeEvery(
-    Transactions.actions.loadTransactionsSuccess,
-    computeExpensesChartData
-  );
-}
-
-function* computeExpensesChartData({ payload: { data } }): Saga<void> {
-  const expensesChartData = makeExpensesChartData(data);
-  console.log(expensesChartData);
-}
 
 // take a transaction {date} and return true if start <= date <= end
 const isDateWithinRange = (start, end) =>
@@ -83,11 +81,31 @@ const convertToChartData = defaults =>
 
 // partition the transactions into [currentMonth, previousMonth]
 const partitionToMonths = start =>
-  R.partition(R.compose(d => isAfter(start, d), R.prop('date')));
+  R.partition(R.compose(d => gte(d, start), R.prop('date')));
+
+// turn [[{expenses, date}], [{expenses,date}]] => [{currentExpenses, currentDate, previousExpenses, previousDate}]
+const zipToOneObj = R.zipWith((current, previous) => ({
+  currentExpenses: current.expenses,
+  currentDate: current.date,
+  previousExpenses: previous.expenses,
+  previousDate: previous.date
+}));
+
+//
+const makeAccumulating = (currentMonthStart, previousMonthStart) =>
+  R.compose(
+    R.tail,
+    // the R.is(String) handles the 'month' key
+    R.scan(R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))), {
+      currentExpenses: 0,
+      currentDate: currentMonthStart,
+      previousExpenses: 0,
+      previousDate: previousMonthStart
+    })
+  );
 
 const makeExpensesChartData = data => {
   const previousMonthStart = startOfMonth(subMonths(new Date(), 1));
-  const previousMonthEnd = endOfMonth(subMonths(new Date(), 1));
   const currentMonthStart = startOfMonth(new Date());
   const currentMonthEnd = endOfMonth(new Date());
 
@@ -99,6 +117,11 @@ const makeExpensesChartData = data => {
   );
 
   return R.compose(
+    makeAccumulating(
+      format(currentMonthStart, 'YYYY-MM-DD'),
+      format(previousMonthStart, 'YYYY-MM-DD')
+    ),
+    R.apply(zipToOneObj),
     partitionToMonths(currentMonthStart),
     convertToChartData(defaults),
     filterRelevantTransactions(previousMonthStart, currentMonthEnd)

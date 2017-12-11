@@ -9,6 +9,7 @@ import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import Accounts from '../Accounts';
 import LineChart from '../LineChart';
+import ExpensesChart from '../ExpensesChart';
 
 type RootProps = {
   fetchAccounts: () => void,
@@ -27,6 +28,11 @@ class Root extends Component<RootProps> {
         <Switch>
           <Route exact path={'/'} component={Accounts.Container} />
           <Route exact path={'/chart'} component={LineChart.Container} />
+          <Route
+            exact
+            path={'/expenses-chart'}
+            component={ExpensesChart.Container}
+          />
           <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
           <Route component={NotFound.Component} />
         </Switch>
