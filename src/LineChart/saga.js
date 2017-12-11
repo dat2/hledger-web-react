@@ -64,6 +64,10 @@ const unGroup = R.compose(
   R.mapObjIndexed((value, date) => R.assoc('month', date, value))
 );
 
+const makeIncomePositive = R.map(
+  R.mapObjIndexed((value, key) => (key === 'income' ? Math.abs(value) : value))
+);
+
 // take an array of [{rootAccount:amount, month}] and add each account with the
 // previous months total
 // [{rootAccount:amount, month}] -> [{rootAccount:amount, month}]
@@ -82,6 +86,7 @@ const makeAccumulating = R.compose(
 // for the line chart to display
 const makeLineChartData: (Array<Transaction>) => Array<DataPoint> = R.compose(
   makeAccumulating,
+  makeIncomePositive,
   unGroup,
   insertDefaults,
   sumAmounts,
