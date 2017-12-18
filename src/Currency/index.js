@@ -25,7 +25,11 @@ export class Currency {
   }
 
   format(): string {
-    return `${this.formatPrefix()}${this.formatNumber()}${this.formatSuffix()}`;
+    return `${this.formatSign()}${this.formatPrefix()}${this.formatNumber()}${this.formatSuffix()}`;
+  }
+
+  formatSign() {
+    return this.quantity < 0 ? '-' : '';
   }
 
   formatPrefix(): string {
@@ -35,7 +39,7 @@ export class Currency {
   }
 
   formatNumber(): string {
-    const string = this.quantity.toString();
+    const string = Math.abs(this.quantity).toString();
     const [integer, fractionalMaybe] = string.split('.');
     const fractional = padEnd(
       R.defaultTo('0')(fractionalMaybe),

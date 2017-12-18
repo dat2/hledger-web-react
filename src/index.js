@@ -5,6 +5,7 @@
 import 'normalize.css';
 import 'sanitize.css';
 import 'tachyons';
+import 'react-virtualized/styles.css';
 
 import system_ui from 'system-ui';
 import { injectGlobal } from 'styled-components';
@@ -57,7 +58,8 @@ const store = configureStore({
   reducers: {
     [Accounts.key]: Accounts.reducer,
     [LineChart.key]: LineChart.reducer,
-    [ExpensesChart.key]: ExpensesChart.reducer
+    [ExpensesChart.key]: ExpensesChart.reducer,
+    [Transactions.key]: Transactions.reducer
   },
   sagas: [Accounts.saga, Transactions.saga, LineChart.saga, ExpensesChart.saga]
 });
