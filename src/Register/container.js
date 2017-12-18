@@ -1,15 +1,26 @@
 // @flow
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Transactions from '../Transactions';
-
+import Actions from './actions';
+import selectors from './selectors';
 import component from './component';
 
 function mapStateToProps(state) {
   return {
-    transactions: Transactions.selectors.transactions(state)
+    transactions: selectors.transactions(state),
+    query: selectors.query(state)
   };
 }
 
-export default connect(mapStateToProps)(component);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      setQuery: Actions.setQuery
+    },
+    dispatch
+  );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(component);

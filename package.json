@@ -20,6 +20,7 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
+    "reselect": "^3.0.1",
     "sanitize.css": "^5.0.0",
     "styled-components": "^2.2.4",
     "system-ui": "^1.0.0",

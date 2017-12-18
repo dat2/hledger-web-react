@@ -27,9 +27,10 @@ const AmountsList = ({ cellData }) =>
     </div>
   ));
 
-const Register = ({ size, transactions }: RegisterProps) => {
+const Register = ({ size, transactions, query, setQuery }: RegisterProps) => {
   return (
     <div className="w-100 h-100 overflow-auto">
+      <input className="w-100" onChange={setQuery} value={query} />
       <Table
         headerHeight={30}
         height={size.height}

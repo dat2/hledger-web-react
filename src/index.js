@@ -24,6 +24,7 @@ import Accounts from './Accounts';
 import Transactions from './Transactions';
 import LineChart from './LineChart';
 import ExpensesChart from './ExpensesChart';
+import Register from './Register';
 
 // globals
 
@@ -59,7 +60,8 @@ const store = configureStore({
     [Accounts.key]: Accounts.reducer,
     [LineChart.key]: LineChart.reducer,
     [ExpensesChart.key]: ExpensesChart.reducer,
-    [Transactions.key]: Transactions.reducer
+    [Transactions.key]: Transactions.reducer,
+    [Register.key]: Register.reducer
   },
   sagas: [Accounts.saga, Transactions.saga, LineChart.saga, ExpensesChart.saga]
 });
