@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // local imports
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
+import ExpensesChart from '../ExpensesChart';
 import HomePage from '../HomePage';
 
 type RootProps = {
@@ -25,6 +26,11 @@ class Root extends Component<RootProps> {
       <Router>
         <Switch>
           <Route exact path={'/'} component={HomePage.Component} />
+          <Route
+            exact
+            path={'/expenses-chart'}
+            component={ExpensesChart.Container}
+          />
           <Route exact path={'/ui-proposal'} component={Dashboard.Component} />
           <Route component={NotFound.Component} />
         </Switch>

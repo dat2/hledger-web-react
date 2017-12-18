@@ -22,6 +22,7 @@ import Root from './Root';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
 import LineChart from './LineChart';
+import ExpensesChart from './ExpensesChart';
 
 // globals
 
@@ -55,9 +56,10 @@ if (process.env.NODE_ENV !== 'production') {
 const store = configureStore({
   reducers: {
     [Accounts.key]: Accounts.reducer,
-    [LineChart.key]: LineChart.reducer
+    [LineChart.key]: LineChart.reducer,
+    [ExpensesChart.key]: ExpensesChart.reducer
   },
-  sagas: [Accounts.saga, Transactions.saga, LineChart.saga]
+  sagas: [Accounts.saga, Transactions.saga, LineChart.saga, ExpensesChart.saga]
 });
 
 const root_mount = document.getElementById('root');
