@@ -57,7 +57,8 @@ const store = configureStore({
   reducers: {
     [Accounts.key]: Accounts.reducer,
     [LineChart.key]: LineChart.reducer,
-    [ExpensesChart.key]: ExpensesChart.reducer
+    [ExpensesChart.key]: ExpensesChart.reducer,
+    [Transactions.key]: Transactions.reducer
   },
   sagas: [Accounts.saga, Transactions.saga, LineChart.saga, ExpensesChart.saga]
 });

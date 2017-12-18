@@ -8,6 +8,7 @@ import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import Accounts from '../Accounts';
 import ExpensesChart from '../ExpensesChart';
 import LineChart from '../LineChart';
+import Register from '../Register';
 
 const HomePage = () => {
   return (
@@ -31,7 +32,7 @@ const HomePage = () => {
           <Switch>
             <Route exact path="/net-worth" component={LineChart.Container} />
             <Route path="/expenses" component={ExpensesChart.Container} />
-            <Route path="/register" component="div" />
+            <Route path="/register" component={Register.Container} />
             <Redirect path="*" to="/net-worth" />
           </Switch>
         </div>
