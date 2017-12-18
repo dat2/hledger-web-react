@@ -5,6 +5,7 @@
 import 'normalize.css';
 import 'sanitize.css';
 import 'tachyons';
+import 'react-virtualized/styles.css';
 
 import system_ui from 'system-ui';
 import { injectGlobal } from 'styled-components';
