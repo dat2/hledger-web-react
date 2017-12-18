@@ -19,21 +19,21 @@ const HomePage = () => {
       <div className="w-two-thirds pa2">
         <div className="flex flex-column h-100 items-stretch">
           <nav className="w-100 pa3">
+            <Link className="link dim dark-gray dib mr3" to="/register">
+              Register
+            </Link>
             <Link className="link dim dark-gray dib mr3" to="/net-worth">
               Total Net Worth
             </Link>
             <Link className="link dim dark-gray dib mr3" to="/expenses">
               Expenses
             </Link>
-            <Link className="link dim dark-gray dib mr3" to="/register">
-              Register
-            </Link>
           </nav>
           <Switch>
+            <Route path="/register" component={Register.Container} />
             <Route exact path="/net-worth" component={LineChart.Container} />
             <Route path="/expenses" component={ExpensesChart.Container} />
-            <Route path="/register" component={Register.Container} />
-            <Redirect path="*" to="/net-worth" />
+            <Redirect path="*" to="/register" />
           </Switch>
         </div>
       </div>
