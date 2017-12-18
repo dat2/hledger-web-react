@@ -8,7 +8,7 @@ import component from './component';
 
 function mapStateToProps(state) {
   return {
-    Transactions: Transactions.selectors.transactions(state)
+    transactions: Transactions.selectors.transactions(state)
   };
 }
 
