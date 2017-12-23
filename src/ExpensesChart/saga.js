@@ -3,18 +3,44 @@
 import { put, takeEvery } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 
-import isAfter from 'date-fns/is_after';
-import isBefore from 'date-fns/is_before';
-import isEqual from 'date-fns/is_equal';
-import startOfMonth from 'date-fns/start_of_month';
-import endOfMonth from 'date-fns/end_of_month';
-import addDays from 'date-fns/add_days';
-import subMonths from 'date-fns/sub_months';
-import format from 'date-fns/format';
+import {
+  isAfter,
+  isBefore,
+  isEqual,
+  startOfMonth,
+  endOfMonth,
+  addDays,
+  subMonths,
+  format
+} from 'date-fns';
 
-import * as R from 'ramda';
+import {
+  curry,
+  compose,
+  both,
+  startsWith,
+  any,
+  prop,
+  filter,
+  values,
+  mapObjIndexed,
+  sum,
+  map,
+  merge,
+  reduceBy,
+  partition,
+  zipWith,
+  tail,
+  scan,
+  mergeWith,
+  is,
+  add,
+  mergeAll,
+  apply
+} from 'ramda';
 
 import Transactions from '../Transactions';
+import type { Transaction } from '../Transactions/types';
 import Actions from './actions';
 
 export default function* expensesSaga(): Saga<void> {
@@ -28,8 +54,12 @@ function* computeExpensesChartData({ payload: { data } }): Saga<void> {
   yield put(Actions.computeExpensesChartData(makeExpensesChartData(data)));
 }
 
-const gte = R.curry((a, b) => isAfter(a, b) || isEqual(a, b));
-const lte = R.curry((a, b) => isBefore(a, b) || isEqual(a, b));
+const gte = curry(
+  (a: Date, b: Date): boolean => isAfter(a, b) || isEqual(a, b)
+);
+const lte = curry(
+  (a: Date, b: Date): boolean => isBefore(a, b) || isEqual(a, b)
+);
 
 function* dayRangeGenerator(startDate, endDate) {
   let currentDate = startDate;
@@ -42,49 +72,43 @@ function* dayRangeGenerator(startDate, endDate) {
 const dayRange = (...args) => Array.from(dayRangeGenerator(...args));
 
 // take a transaction {date} and return true if start <= date <= end
-const isDateWithinRange = (start, end) =>
-  R.compose(R.both(lte(start), gte(end)), R.prop('date'));
+const isDateWithinRange = (start: Date, end: Date): boolean =>
+  compose(both(lte(start), gte(end)), prop('date'));
 
 // take a transaction {postings:[{account}]}, and return true if any one of
 // the postings starts with 'expenses'
-const isExpense = R.compose(
-  R.any(R.compose(R.startsWith('expenses'), R.prop('account'))),
-  R.prop('postings')
+const isExpense: Transaction => boolean = compose(
+  any(compose(startsWith('expenses'), prop('account'))),
+  prop('postings')
 );
 
-const filterRelevantTransactions = (start, end) =>
-  R.filter(R.both(isDateWithinRange(start, end), isExpense));
+const filterRelevantTransactions = (start: Date, end: Date): boolean =>
+  filter(both(isDateWithinRange(start, end), isExpense));
 
 // convert [{date, postings:[{account, amounts:[{quantity}]}]}] into
 // [{date, expenses}]
 const convertToChartData = defaults =>
-  R.compose(
+  compose(
     // pick out the objects
-    R.values,
+    values,
     // put the keys into the object
-    R.mapObjIndexed((expenses, date) => ({ expenses, date })),
+    mapObjIndexed((expenses, date) => ({ expenses, date })),
     // make sure every day has at least 0
-    R.merge(defaults),
+    merge(defaults),
     // pick out the sum of the quantities
-    R.map(
-      R.compose(
-        R.sum,
-        R.map(R.map(R.prop('quantity'))),
-        R.map(R.prop('amounts'))
-      )
-    ),
+    map(compose(sum, map(map(prop('quantity'))), map(prop('amounts')))),
     // filter transactions to just expenses
-    R.map(R.filter(R.compose(R.startsWith('expenses'), R.prop('account')))),
+    map(filter(compose(startsWith('expenses'), prop('account')))),
     // group by date
-    R.reduceBy((acc, o) => acc.concat(o.postings), [], R.prop('date'))
+    reduceBy((acc, o) => acc.concat(o.postings), [], prop('date'))
   );
 
 // partition the transactions into [currentMonth, previousMonth]
 const partitionToMonths = start =>
-  R.partition(R.compose(d => gte(d, start), R.prop('date')));
+  partition(compose(d => gte(d, start), prop('date')));
 
 // turn [[{expenses, date}], [{expenses,date}]] => [{currentExpenses, currentDate, previousExpenses, previousDate}]
-const zipToOneObj = R.zipWith((current, previous) => ({
+const zipToOneObj = zipWith((current, previous) => ({
   currentExpenses: current.expenses,
   currentDate: current.date,
   previousExpenses: previous.expenses,
@@ -93,10 +117,10 @@ const zipToOneObj = R.zipWith((current, previous) => ({
 
 //
 const makeAccumulating = (currentMonthStart, previousMonthStart) =>
-  R.compose(
-    R.tail,
-    // the R.is(String) handles the 'month' key
-    R.scan(R.mergeWith((a, b) => (R.is(String, b) ? b : R.add(a, b))), {
+  compose(
+    tail,
+    // the is(String) handles the 'month' key
+    scan(mergeWith((a, b) => (is(String, b) ? b : add(a, b))), {
       currentExpenses: 0,
       currentDate: currentMonthStart,
       previousExpenses: 0,
@@ -109,19 +133,19 @@ const makeExpensesChartData = data => {
   const currentMonthStart = startOfMonth(new Date());
   const currentMonthEnd = endOfMonth(new Date());
 
-  const defaults = R.mergeAll(
-    R.map(
+  const defaults = mergeAll(
+    map(
       date => ({ [format(date, 'YYYY-MM-DD')]: 0 }),
       dayRange(previousMonthStart, currentMonthEnd)
     )
   );
 
-  return R.compose(
+  return compose(
     makeAccumulating(
       format(currentMonthStart, 'YYYY-MM-DD'),
       format(previousMonthStart, 'YYYY-MM-DD')
     ),
-    R.apply(zipToOneObj),
+    apply(zipToOneObj),
     partitionToMonths(currentMonthStart),
     convertToChartData(defaults),
     filterRelevantTransactions(previousMonthStart, currentMonthEnd)

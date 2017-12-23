@@ -1,18 +1,19 @@
 // @flow
 
 import { createSelector } from 'reselect';
-import * as R from 'ramda';
+import { compose, prop } from 'ramda';
 
 import Transactions from '../Transactions';
+import type { Transaction } from '../Transactions/types';
+import type { ReduxState } from '../types';
 import { applyFilter } from './filter';
+import type { Filter, RegisterState } from './types';
 
-export const key = 'register';
+const localState: ReduxState => RegisterState = prop('register');
 
-const localState = R.prop(key);
+const filter: ReduxState => Filter = compose(prop('filter'), localState);
 
-const filter = R.compose(R.prop('filter'), localState);
-
-const transactions = createSelector(
+const transactions: ReduxState => Array<Transaction> = createSelector(
   Transactions.selectors.transactions,
   filter,
   applyFilter

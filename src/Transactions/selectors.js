@@ -2,11 +2,15 @@
 
 import { compose, prop } from 'ramda';
 
-export const key = 'transactions';
+import type { ReduxState } from '../types';
+import type { TransactionsState, Transaction } from './types';
 
-const localState = prop(key);
+const localState: ReduxState => TransactionsState = prop('transactions');
 
-const transactions = compose(prop('data'), localState);
+const transactions: ReduxState => Array<Transaction> = compose(
+  prop('data'),
+  localState
+);
 
 export default {
   localState,

@@ -1,7 +1,7 @@
 // @flow
 
-import * as R from 'ramda';
-import * as RA from 'ramda-adjunct';
+import { compose, fromPairs, map, split, T } from 'ramda';
+import { renameKeys } from 'ramda-adjunct';
 
 import type { Transaction } from '../Transactions/types';
 import type { FilterPairs, Filter, AmountFilter } from './types';
@@ -14,7 +14,7 @@ function parseAmountFilter(amountFilter: string): AmountFilter {
   } else if (amountFilter.length > 0) {
     return { type: 'EQ', amount: parseFloat(amountFilter) };
   } else {
-    return { type: 'NA' };
+    return { type: 'NA', amount: 0 };
   }
 }
 
@@ -27,26 +27,29 @@ export function makeFilter(filters: FilterPairs): Filter {
   };
 }
 
-const parseColonSeparated: string => FilterPairs = R.compose(
-  RA.renameKeys({ acct: 'account', desc: 'description' }),
-  R.fromPairs,
-  R.map(R.split(':')),
-  R.split(/\s/)
+const parseColonSeparated: string => FilterPairs = compose(
+  renameKeys({ acct: 'account', desc: 'description' }),
+  fromPairs,
+  map(split(':')),
+  split(/\s/)
 );
 
 export function parseFilter(filter: string): Filter {
   return makeFilter(parseColonSeparated(filter));
 }
 
-function getAmountFilterFunction({ type, amount }) {
+function getAmountFilterFunction({
+  type,
+  amount
+}: AmountFilter): number => boolean {
   if (type === 'GT') {
     return a => a > amount;
   } else if (type === 'EQ') {
-    return R.equals(amount);
+    return a => a === amount;
   } else if (type === 'LT') {
     return a => a < amount;
   } else {
-    return R.T;
+    return T;
   }
 }
 

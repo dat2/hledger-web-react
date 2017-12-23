@@ -1,7 +1,7 @@
 // @flow
 
 // 3rd-party imports
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { lifecycle } from 'recompose';
 
@@ -9,7 +9,6 @@ import { lifecycle } from 'recompose';
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import HomePage from '../HomePage';
-import type { RootProps } from './types';
 
 const Root = () => (
   <Router>

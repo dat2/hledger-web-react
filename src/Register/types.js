@@ -1,9 +1,12 @@
 // @flow
 
 import type { Transaction } from '../Transactions/types';
+import type { Amount } from '../Currency/types';
 
 export type RegisterProps = {
-  +transactions: Array<Transaction>
+  +transactions: Array<Transaction>,
+  +filter: Filter,
+  +parseFilter: string => void
 };
 
 export type FilterPairs = {
@@ -22,5 +25,9 @@ export type Filter = {
 
 export type AmountFilter = {
   +type: 'GT' | 'EQ' | 'LT' | 'NA',
-  +amount?: number
+  +amount: number
+};
+
+export type RegisterState = {
+  +filter: Filter
 };

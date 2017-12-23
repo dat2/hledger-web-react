@@ -13,9 +13,9 @@ import {
   YAxis
 } from 'recharts';
 
-import type { ChartViewProps } from './types';
+import type { LineChartProps } from './types';
 
-const ChartView = ({ data }: ChartViewProps) => (
+const HledgerLineChart = ({ data }: LineChartProps) => (
   <div className="w-100 h-100 overflow-hidden">
     <ResponsiveContainer>
       <LineChart data={data}>
@@ -34,4 +34,4 @@ const ChartView = ({ data }: ChartViewProps) => (
   </div>
 );
 
-export default ChartView;
+export default HledgerLineChart;

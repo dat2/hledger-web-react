@@ -12,7 +12,7 @@ import ExpensesChart from './ExpensesChart';
 import Register from './Register';
 import type { ReduxState } from './types';
 
-const reducer = combineReducers({
+const reducer: (ReduxState, any) => ReduxState = combineReducers({
   accounts: Accounts.reducer,
   lineChart: LineChart.reducer,
   expensesChart: ExpensesChart.reducer,

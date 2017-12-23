@@ -3,8 +3,9 @@
 import { handleActions } from 'redux-actions';
 
 import Actions from './actions';
+import type { LineChartState } from './types';
 
-const initialState = {
+const initialState: LineChartState = {
   data: []
 };
 
