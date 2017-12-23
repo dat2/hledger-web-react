@@ -15,7 +15,6 @@ import {
 } from 'date-fns';
 
 import {
-  curry,
   compose,
   both,
   any,
@@ -36,7 +35,8 @@ import {
   add,
   mergeAll,
   apply,
-  either
+  either,
+  startsWith
 } from 'ramda';
 
 import Transactions from '../Transactions';

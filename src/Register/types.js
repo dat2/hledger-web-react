@@ -10,10 +10,10 @@ export type RegisterProps = {
 };
 
 export type FilterPairs = {
-  +account: string,
-  +amount: string,
-  +date: string,
-  +description: string
+  +account?: string,
+  +amount?: string,
+  +date?: string,
+  +description?: string
 };
 
 export type Filter = {

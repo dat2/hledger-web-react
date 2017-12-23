@@ -7,7 +7,9 @@ import type { Transaction } from '../Transactions/types';
 import type { FilterPairs, Filter, AmountFilter } from './types';
 
 function parseAmountFilter(amountFilter: string): AmountFilter {
-  if (amountFilter[0] === '>') {
+  if (amountFilter.length === 0) {
+    return { type: 'NA', amount: 0 };
+  } else if (amountFilter[0] === '>') {
     return { type: 'GT', amount: parseFloat(amountFilter.substring(1)) };
   } else if (amountFilter[0] === '<') {
     return { type: 'LT', amount: parseFloat(amountFilter.substring(1)) };
@@ -20,10 +22,10 @@ function parseAmountFilter(amountFilter: string): AmountFilter {
 
 export function makeFilter(filters: FilterPairs): Filter {
   return {
-    account: new RegExp(filters.account, 'i'),
-    amount: parseAmountFilter(filters.amount),
-    date: new RegExp(filters.date, 'i'),
-    description: new RegExp(filters.description, 'i')
+    account: new RegExp(filters.account || '', 'i'),
+    amount: parseAmountFilter(filters.amount || ''),
+    date: new RegExp(filters.date || '', 'i'),
+    description: new RegExp(filters.description || '', 'i')
   };
 }
 
