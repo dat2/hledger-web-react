@@ -18,7 +18,6 @@ import {
   curry,
   compose,
   both,
-  startsWith,
   any,
   prop,
   filter,
@@ -36,7 +35,8 @@ import {
   is,
   add,
   mergeAll,
-  apply
+  apply,
+  either
 } from 'ramda';
 
 import Transactions from '../Transactions';
@@ -54,12 +54,8 @@ function* computeExpensesChartData({ payload: { data } }): Saga<void> {
   yield put(Actions.computeExpensesChartData(makeExpensesChartData(data)));
 }
 
-const gte = curry(
-  (a: Date, b: Date): boolean => isAfter(a, b) || isEqual(a, b)
-);
-const lte = curry(
-  (a: Date, b: Date): boolean => isBefore(a, b) || isEqual(a, b)
-);
+const gte: (Date, Date) => boolean = either(isAfter, isEqual);
+const lte: (Date, Date) => boolean = either(isBefore, isEqual);
 
 function* dayRangeGenerator(startDate, endDate) {
   let currentDate = startDate;
