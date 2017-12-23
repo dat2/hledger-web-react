@@ -1,3 +1,5 @@
+// @flow
+
 export type DataPoint = {
   month: string,
   assets: number,

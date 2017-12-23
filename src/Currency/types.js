@@ -1,3 +1,5 @@
+// @flow
+
 export type HledgerAmountStyle = {
   ascommodityside: 'L' | 'R',
   ascommodityspaced: boolean,

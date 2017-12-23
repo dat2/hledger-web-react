@@ -1,3 +1,5 @@
+// @flow
+
 export type HledgerAccount = {
   aname: string,
   aibalance: Array<HledgerAmount>,

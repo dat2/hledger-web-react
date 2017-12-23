@@ -27,23 +27,18 @@ function highlight(filter, string) {
   }
 }
 
-const AccountsList = filter => ({ cellData }) =>
-  cellData
-    .map(p => p.account)
-    .filter(account => filter.account.test(account))
-    .map((account, index) => (
-      <div key={`${account}-${index}`}>
-        {highlight(filter.account, account)}
-        <br />
-      </div>
-    ));
+const renderAccounts = ({ cellData: { accounts, filter } }) =>
+  accounts.map((account, index) => (
+    <div key={`${account}-${index}`}>
+      {highlight(filter, account)}
+      <br />
+    </div>
+  ));
 
 const highlightCell = filter => ({ cellData }) => highlight(filter, cellData);
 
-const AmountsList = filter => ({ cellData }) =>
-  R.flatten(
-    cellData.filter(p => filter.account.test(p.account)).map(p => p.amounts)
-  ).map((amount, index) => (
+const renderAmounts = ({ cellData }) =>
+  cellData.map((amount, index) => (
     <div key={`${amount.quantity}-${index}`}>
       {new Currency(amount).format()}
       <br />
@@ -54,8 +49,8 @@ const Register = ({
   size,
   transactions,
   getVisiblePostings,
-  renderAccounts,
-  renderAmounts,
+  getAccountsCellData,
+  getAmountsCellData,
   renderDate,
   renderDescription,
   value,
@@ -86,17 +81,19 @@ const Register = ({
           width={size.width * 0.4}
         />
         <Column
+          cellDataGetter={getAccountsCellData}
           cellRenderer={renderAccounts}
           dataKey="postings"
           label="Accounts"
           width={size.width * 0.3}
         />
         <Column
+          cellDataGetter={getAmountsCellData}
           cellRenderer={renderAmounts}
-          className="tr"
           dataKey="postings"
-          headerClassName="tr"
           label="Amounts"
+          className="tr"
+          headerClassName="tr"
           width={size.width * 0.2}
         />
       </Table>
@@ -114,13 +111,23 @@ const enhance = compose(
     }
   }),
   withPropsOnChange(['filter'], props => ({
-    renderAccounts: AccountsList(props.filter),
-    renderAmounts: AmountsList(props.filter),
-    renderDate: highlightCell(props.filter.date),
-    renderDescription: highlightCell(props.filter.description),
+    getAccountsCellData: ({ dataKey, rowData }) => ({
+      accounts: rowData[dataKey]
+        .map(p => p.account)
+        .filter(account => props.filter.account.test(account)),
+      filter: props.filter.account
+    }),
+    getAmountsCellData: ({ dataKey, rowData }) =>
+      R.flatten(
+        rowData[dataKey]
+          .filter(p => props.filter.account.test(p.account))
+          .map(p => p.amounts)
+      ),
     getVisiblePostings: transaction =>
       transaction.postings.filter(p => props.filter.account.test(p.account))
-        .length
+        .length,
+    renderDate: highlightCell(props.filter.date),
+    renderDescription: highlightCell(props.filter.description)
   })),
   sizeMe({ monitorHeight: true })
 );

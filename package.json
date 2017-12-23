@@ -36,7 +36,7 @@
     "pretty": "prettier --single-quote --write 'src/**/*.js'",
     "precommit": "lint-staged",
     "flow": "flow",
-    "flow-annotation-check": "cd src/;flow-annotation-check --list-files=noflow"
+    "noflow": "cd src/;flow-annotation-check --list-files=noflow"
   },
   "devDependencies": {
     "flow-annotation-check": "^1.7.0",
@@ -47,7 +47,10 @@
     "react-scripts": "1.0.17"
   },
   "lint-staged": {
-    "*.{js,json,css,md}": ["prettier --single-quote --write", "git add"]
+    "*.{js,css,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "proxy": "http://localhost:8001"
 }

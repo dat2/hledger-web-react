@@ -1,3 +1,5 @@
+// @flow
+
 import type { HledgerAmount, Amount } from '../Currency';
 
 export type HledgerTransaction = {

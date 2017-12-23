@@ -1,3 +1,5 @@
+// @flow
+
 export type DataPoint = {
   currentExpenses: number,
   currentDate: string,
