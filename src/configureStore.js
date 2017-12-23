@@ -3,28 +3,31 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
-import type { Saga } from 'redux-saga';
 import logger from 'redux-logger';
 
-import type { AccountsState } from './Accounts/reducer';
+import Accounts from './Accounts';
+import Transactions from './Transactions';
+import LineChart from './LineChart';
+import ExpensesChart from './ExpensesChart';
+import Register from './Register';
+import type { ReduxState } from './types';
 
-type ReducerKeys = 'accounts';
+const reducer = combineReducers({
+  accounts: Accounts.reducer,
+  lineChart: LineChart.reducer,
+  expensesChart: ExpensesChart.reducer,
+  transactions: Transactions.reducer,
+  register: Register.reducer
+});
 
-type LocalSagas = () => Saga<void>;
+const sagas = [
+  Accounts.saga,
+  Transactions.saga,
+  LineChart.saga,
+  ExpensesChart.saga
+];
 
-type StoreConfig = {
-  reducers: { [ReducerKeys]: boolean },
-  initialState?: void,
-  sagas: Array<LocalSagas>
-};
-
-export type StoreState = {
-  +accounts: AccountsState
-};
-
-export default function configureStore(
-  { reducers = {}, initialState = undefined, sagas = [] }: StoreConfig = {}
-) {
+export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
 
   const middleware = [sagaMiddleware];
@@ -33,8 +36,7 @@ export default function configureStore(
   }
 
   const store = createStore(
-    combineReducers(reducers),
-    initialState,
+    reducer,
     composeWithDevTools(applyMiddleware(...middleware))
   );
 

@@ -3,11 +3,7 @@
 import { handleActions } from 'redux-actions';
 
 import Actions from './actions';
-
-export type AccountsState = {
-  +accounts: Array<any>,
-  +error?: any
-};
+import type { AccountsState } from './types';
 
 const initialState: AccountsState = {
   accounts: [],
@@ -16,12 +12,12 @@ const initialState: AccountsState = {
 
 export default handleActions(
   {
-    [Actions.fetchAccountsSuccess]: (state: AccountsState, action) => ({
+    [String(Actions.fetchAccountsSuccess)]: (state: AccountsState, action) => ({
       ...state,
       accounts: action.payload,
       error: null
     }),
-    [Actions.fetchAccountsFailed]: (state: AccountsState, action) => ({
+    [String(Actions.fetchAccountsFailed)]: (state: AccountsState, action) => ({
       ...state,
       accounts: [],
       error: action.payload

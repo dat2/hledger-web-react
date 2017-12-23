@@ -1,4 +1,10 @@
 // @flow
+import type { HledgerAmount, Amount } from '../Currency/types';
+
+export type AccountsState = {
+  +accounts: Array<Account>,
+  +error: ?Error
+};
 
 export type HledgerAccount = {
   aname: string,
@@ -12,14 +18,12 @@ export type Account = {
   children: Array<Account>
 };
 
-export type AccountsViewProps = {
+export type RootProps = {
   accounts: Array<Account>
 };
 
-export type AccountRowProps = {
-  account: Account
-};
-
-export type AccountRowState = {
-  hidden: boolean
+export type NodeProps = {
+  +account: Account,
+  +hidden: boolean,
+  +onClick: Event => void
 };

@@ -3,24 +3,24 @@
 import type { Transaction } from '../Transactions/types';
 
 export type RegisterProps = {
-  transactions: Array<Transaction>
+  +transactions: Array<Transaction>
 };
 
 export type FilterPairs = {
-  account: string,
-  amount: string,
-  date: string,
-  description: string
+  +account: string,
+  +amount: string,
+  +date: string,
+  +description: string
 };
 
 export type Filter = {
-  account: RegExp,
-  amount: AmountFilter,
-  date: RegExp,
-  description: RegExp
+  +account: RegExp,
+  +amount: AmountFilter,
+  +date: RegExp,
+  +description: RegExp
 };
 
 export type AmountFilter = {
-  type: 'GT' | 'EQ' | 'LT' | 'NA',
-  amount?: float
+  +type: 'GT' | 'EQ' | 'LT' | 'NA',
+  +amount?: number
 };

@@ -1,12 +1,12 @@
 // @flow
 
-import * as R from 'ramda';
+import { compose, prop } from 'ramda';
 
 export const key = 'transactions';
 
-const localState = R.prop(key);
+const localState = prop(key);
 
-const transactions = R.compose(R.prop('data'), localState);
+const transactions = compose(prop('data'), localState);
 
 export default {
   localState,
