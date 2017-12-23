@@ -3,16 +3,17 @@
 import { handleActions } from 'redux-actions';
 
 import Actions from './actions';
+import { makeFilter } from './filter';
 
 const initialState = {
-  query: ''
+  filter: makeFilter()
 };
 
 export default handleActions(
   {
-    [Actions.setQuery]: (state, action) => ({
+    [Actions.parseFilter]: (state, action) => ({
       ...state,
-      query: action.payload
+      filter: action.payload
     })
   },
   initialState

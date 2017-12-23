@@ -1,8 +1,9 @@
 // @flow
 
 import { createActions } from 'redux-actions';
+import { parseFilter } from './filter';
 
 export default createActions(
-  { SET_QUERY: e => e.target.value },
+  { PARSE_FILTER: parseFilter },
   { namespace: '/REGISTER/' }
 );

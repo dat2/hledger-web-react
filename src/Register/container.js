@@ -10,14 +10,14 @@ import component from './component';
 function mapStateToProps(state) {
   return {
     transactions: selectors.transactions(state),
-    query: selectors.query(state)
+    filter: selectors.filter(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      setQuery: Actions.setQuery
+      parseFilter: Actions.parseFilter
     },
     dispatch
   );

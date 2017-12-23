@@ -4,26 +4,22 @@ import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
 import Transactions from '../Transactions';
+import { applyFilter } from './filter';
 
 export const key = 'register';
 
 const localState = R.prop(key);
 
-const query = R.compose(R.prop('query'), localState);
+const filter = R.compose(R.prop('filter'), localState);
 
 const transactions = createSelector(
   Transactions.selectors.transactions,
-  query,
-  (transactions, query) =>
-    transactions.filter(t =>
-      t.postings.some(p =>
-        p.account.toLowerCase().includes(query.toLowerCase())
-      )
-    )
+  filter,
+  applyFilter
 );
 
 export default {
   localState,
   transactions,
-  query
+  filter
 };
