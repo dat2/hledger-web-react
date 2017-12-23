@@ -6,7 +6,7 @@ import Actions from './actions';
 import { makeFilter } from './filter';
 
 const initialState = {
-  filter: makeFilter()
+  filter: makeFilter({ account: '', amount: '', date: '', description: '' })
 };
 
 export default handleActions(
