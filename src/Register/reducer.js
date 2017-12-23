@@ -4,8 +4,9 @@ import { handleActions } from 'redux-actions';
 
 import Actions from './actions';
 import { makeFilter } from './filter';
+import type { RegisterState } from './types';
 
-const initialState = {
+const initialState: RegisterState = {
   filter: makeFilter({ account: '', amount: '', date: '', description: '' })
 };
 

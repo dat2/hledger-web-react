@@ -9,7 +9,6 @@ import sizeMe from 'react-sizeme';
 import { compose, withHandlers, withPropsOnChange, withState } from 'recompose';
 
 // component
-import type { RegisterProps } from './types';
 import { Currency } from '../Currency';
 
 function highlight(filter, string) {
@@ -45,7 +44,7 @@ const renderAmounts = ({ cellData }) =>
     </div>
   ));
 
-const Register = ({
+const InnerRegister = ({
   size,
   transactions,
   getVisiblePostings,
@@ -55,51 +54,49 @@ const Register = ({
   renderDescription,
   value,
   onChange
-}: RegisterProps) => {
-  return (
-    <div className="w-100 h-100">
-      <input className="w-100" onChange={onChange} value={value} />
-      <Table
-        headerHeight={30}
-        height={size.height}
-        rowClassName={({ index }) => (index === -1 ? '' : 'stripe-dark')}
-        rowCount={transactions.length}
-        rowGetter={({ index }) => transactions[index]}
-        rowHeight={({ index }) => getVisiblePostings(transactions[index]) * 20}
-        width={size.width}
-      >
-        <Column
-          cellRenderer={renderDate}
-          dataKey="date"
-          label="Date"
-          width={size.width * 0.1}
-        />
-        <Column
-          cellRenderer={renderDescription}
-          dataKey="description"
-          label="Description"
-          width={size.width * 0.4}
-        />
-        <Column
-          cellDataGetter={getAccountsCellData}
-          cellRenderer={renderAccounts}
-          dataKey="postings"
-          label="Accounts"
-          width={size.width * 0.3}
-        />
-        <Column
-          cellDataGetter={getAmountsCellData}
-          cellRenderer={renderAmounts}
-          dataKey="postings"
-          label="Amounts"
-          className="tr"
-          headerClassName="tr"
-          width={size.width * 0.2}
-        />
-      </Table>
-    </div>
-  );
-};
+}) => (
+  <div className="w-100 h-100">
+    <input className="w-100" onChange={onChange} value={value} />
+    <Table
+      headerHeight={30}
+      height={size.height}
+      rowClassName={({ index }) => (index === -1 ? '' : 'stripe-dark')}
+      rowCount={transactions.length}
+      rowGetter={({ index }) => transactions[index]}
+      rowHeight={({ index }) => getVisiblePostings(transactions[index]) * 20}
+      width={size.width}
+    >
+      <Column
+        cellRenderer={renderDate}
+        dataKey="date"
+        label="Date"
+        width={size.width * 0.1}
+      />
+      <Column
+        cellRenderer={renderDescription}
+        dataKey="description"
+        label="Description"
+        width={size.width * 0.4}
+      />
+      <Column
+        cellDataGetter={getAccountsCellData}
+        cellRenderer={renderAccounts}
+        dataKey="postings"
+        label="Accounts"
+        width={size.width * 0.3}
+      />
+      <Column
+        cellDataGetter={getAmountsCellData}
+        cellRenderer={renderAmounts}
+        dataKey="postings"
+        label="Amounts"
+        className="tr"
+        headerClassName="tr"
+        width={size.width * 0.2}
+      />
+    </Table>
+  </div>
+);
 
 const enhance = compose(
   withState('value', 'setValue', ''),
@@ -132,4 +129,4 @@ const enhance = compose(
   sizeMe({ monitorHeight: true })
 );
 
-export default enhance(Register);
+export default enhance(InnerRegister);

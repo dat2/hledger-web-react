@@ -1,14 +1,18 @@
 // @flow
 
 export type DataPoint = {
-  month: string,
-  assets: number,
-  equity: number,
-  income: number,
-  expenses: number,
-  liabilities: number
+  +month: string,
+  +assets: number,
+  +equity: number,
+  +income: number,
+  +expenses: number,
+  +liabilities: number
 };
 
-export type ChartViewProps = {
-  data: Array<DataPoint>
+export type LineChartProps = {
+  +data: Array<DataPoint>
+};
+
+export type LineChartState = {
+  +data: Array<DataPoint>
 };

@@ -1,12 +1,15 @@
 // @flow
 
-import * as R from 'ramda';
+import { compose, prop } from 'ramda';
 
-export const key = 'expensesChart';
+import type { ReduxState } from '../types';
+import type { ExpensesChartState, DataPoint } from './types';
 
-const localState = R.prop(key);
+const localState: ReduxState => ExpensesChartState = prop('expensesChart');
 
-const expensesChartData = R.compose(R.prop('data'), localState);
+const getData: ExpensesChartState => Array<DataPoint> = prop('data');
+
+const expensesChartData = compose(getData, localState);
 
 export default {
   localState,

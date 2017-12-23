@@ -1,36 +1,30 @@
 // @flow
 
 // 3rd-party imports
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { lifecycle } from 'recompose';
 
 // local imports
 import NotFound from '../NotFound';
 import Dashboard from '../Dashboard';
 import HomePage from '../HomePage';
 
-type RootProps = {
-  fetchAccounts: () => void,
-  loadTransactions: () => void
-};
+const Root = () => (
+  <Router>
+    <Switch>
+      <Route path="/" component={HomePage.Component} />
+      <Route exact path="/ui-proposal" component={Dashboard.Component} />
+      <Route component={NotFound.Component} />
+    </Switch>
+  </Router>
+);
 
-class Root extends Component<RootProps> {
+const enhance = lifecycle({
   componentDidMount() {
     this.props.fetchAccounts();
     this.props.loadTransactions();
   }
+});
 
-  render() {
-    return (
-      <Router>
-        <Switch>
-          <Route path="/" component={HomePage.Component} />
-          <Route exact path="/ui-proposal" component={Dashboard.Component} />
-          <Route component={NotFound.Component} />
-        </Switch>
-      </Router>
-    );
-  }
-}
-
-export default Root;
+export default enhance(Root);

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "classnames": "^2.2.5",
     "date-fns": "^1.29.0",
     "localforage": "^1.5.5",
     "lodash.padend": "^4.6.1",

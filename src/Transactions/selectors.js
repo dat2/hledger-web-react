@@ -1,12 +1,16 @@
 // @flow
 
-import * as R from 'ramda';
+import { compose, prop } from 'ramda';
 
-export const key = 'transactions';
+import type { ReduxState } from '../types';
+import type { TransactionsState, Transaction } from './types';
 
-const localState = R.prop(key);
+const localState: ReduxState => TransactionsState = prop('transactions');
 
-const transactions = R.compose(R.prop('data'), localState);
+const transactions: ReduxState => Array<Transaction> = compose(
+  prop('data'),
+  localState
+);
 
 export default {
   localState,

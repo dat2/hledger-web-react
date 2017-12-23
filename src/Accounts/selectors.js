@@ -1,14 +1,17 @@
 // @flow
 
-import * as R from 'ramda';
+import { compose, prop } from 'ramda';
 
-export const key = 'accounts';
+import type { ReduxState } from '../types';
+import type { AccountsState, Account } from './types';
 
-const localState = R.prop(key);
+const localState: ReduxState => AccountsState = prop('accounts');
 
-const allAccounts = R.prop('accounts');
+const accounts: AccountsState => Array<Account> = prop('accounts');
+
+const allAccounts = compose(accounts, localState);
 
 export default {
   localState,
-  allAccounts: R.compose(allAccounts, localState)
+  allAccounts
 };

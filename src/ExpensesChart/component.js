@@ -15,7 +15,7 @@ import {
 
 import type { ExpensesChartProps } from './types';
 
-const ExpensesChartView = ({ data }: ExpensesChartProps) => (
+const ExpensesChart = ({ data }: ExpensesChartProps) => (
   <div className="w-100 h-100 overflow-hidden">
     <ResponsiveContainer>
       <AreaChart data={data}>
@@ -41,4 +41,4 @@ const ExpensesChartView = ({ data }: ExpensesChartProps) => (
   </div>
 );
 
-export default ExpensesChartView;
+export default ExpensesChart;

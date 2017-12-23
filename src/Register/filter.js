@@ -7,23 +7,25 @@ import type { Transaction } from '../Transactions/types';
 import type { FilterPairs, Filter, AmountFilter } from './types';
 
 function parseAmountFilter(amountFilter: string): AmountFilter {
-  if (amountFilter[0] === '>') {
+  if (amountFilter.length === 0) {
+    return { type: 'NA', amount: 0 };
+  } else if (amountFilter[0] === '>') {
     return { type: 'GT', amount: parseFloat(amountFilter.substring(1)) };
   } else if (amountFilter[0] === '<') {
     return { type: 'LT', amount: parseFloat(amountFilter.substring(1)) };
   } else if (amountFilter.length > 0) {
     return { type: 'EQ', amount: parseFloat(amountFilter) };
   } else {
-    return { type: 'NA' };
+    return { type: 'NA', amount: 0 };
   }
 }
 
 export function makeFilter(filters: FilterPairs): Filter {
   return {
-    account: new RegExp(filters.account, 'i'),
-    amount: parseAmountFilter(filters.amount),
-    date: new RegExp(filters.date, 'i'),
-    description: new RegExp(filters.description, 'i')
+    account: new RegExp(filters.account || '', 'i'),
+    amount: parseAmountFilter(filters.amount || ''),
+    date: new RegExp(filters.date || '', 'i'),
+    description: new RegExp(filters.description || '', 'i')
   };
 }
 
@@ -38,13 +40,16 @@ export function parseFilter(filter: string): Filter {
   return makeFilter(parseColonSeparated(filter));
 }
 
-function getAmountFilterFunction({ type, amount }) {
+function getAmountFilterFunction({
+  type,
+  amount
+}: AmountFilter): number => boolean {
   if (type === 'GT') {
-    return a => a > amount;
+    return R.gt(R.__, amount);
   } else if (type === 'EQ') {
     return R.equals(amount);
   } else if (type === 'LT') {
-    return a => a < amount;
+    return R.lt(R.__, amount);
   } else {
     return R.T;
   }

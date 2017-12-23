@@ -1,77 +1,58 @@
 // @flow
 
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { Currency } from '../Currency';
-import type {
-  AccountsViewProps,
-  AccountRowProps,
-  AccountRowState
-} from './types';
+import React from 'react';
+import cx from 'classnames';
+import { compose, withHandlers, withState } from 'recompose';
 
-const AccountsView = (props: AccountsViewProps) => (
+import { Currency } from '../Currency';
+import type { RootProps, NodeProps } from './types';
+
+const Root = (props: RootProps) => (
   <div>
     {props.accounts.map(account => (
-      <AccountRow account={account} key={account.name} />
+      <Node account={account} key={account.name} />
     ))}
   </div>
 );
 
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const List = styled.ul`
-  list-style: none;
-  padding-left: 10px;
-  cursor: ${props => (props.hasChildren ? 'pointer' : 'default')};
-`;
-
-const Item = styled.li`
-  display: ${props => (props.hidden ? 'none' : 'block')};
-`;
-
-const Quantity = styled.span`
-  color: ${props => (props.negative ? 'red' : 'inherit')};
-`;
-
-class AccountRow extends Component<AccountRowProps, AccountRowState> {
-  state = {
-    hidden: false
-  };
-
-  toggleHidden = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.setState(({ hidden }) => ({ hidden: !hidden }));
-  };
-
-  render() {
-    const { name, amounts, children } = this.props.account;
-
-    return (
-      <List onClick={this.toggleHidden} hasChildren={children.length > 0}>
-        <li>
-          <Row>
-            <span>{name}</span>
-            <span>
-              {amounts.map((amount, index) => (
-                <Quantity key={index} negative={amount.quantity < 0}>
-                  {new Currency(amount).format()}
-                </Quantity>
-              ))}
+const InnerNode = ({
+  account: { name, amounts, children },
+  hidden,
+  onClick
+}: NodeProps) => (
+  <ul className="list pl2">
+    <li>
+      <div
+        className={cx('flex justify-between', { pointer: children.length > 0 })}
+        onClick={onClick}
+      >
+        <span>{name}</span>
+        <span>
+          {amounts.map((amount, index) => (
+            <span key={index} className={cx({ red: amount.quantity < 0 })}>
+              {new Currency(amount).format()}
             </span>
-          </Row>
-        </li>
-        <Item hidden={this.state.hidden}>
-          {children.map(account => (
-            <AccountRow account={account} key={account.name} />
           ))}
-        </Item>
-      </List>
-    );
-  }
-}
+        </span>
+      </div>
+    </li>
+    <li className={cx({ dn: hidden })}>
+      {children.map(account => <Node account={account} key={account.name} />)}
+    </li>
+  </ul>
+);
 
-export default AccountsView;
+const enhance = compose(
+  withState('hidden', 'setHidden', false),
+  withHandlers({
+    onClick: props => event => {
+      event.preventDefault();
+      event.stopPropagation();
+      props.setHidden(!props.hidden);
+    }
+  })
+);
+
+const Node = enhance(InnerNode);
+
+export default enhance(Root);
